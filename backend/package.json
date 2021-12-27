@@ -1,0 +1,15 @@
+{
+  "name": "tasker",
+  "version": "1.0.0",
+  "description": "task brian with things",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Gonzales",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^10.0.0"
+  }
+}
