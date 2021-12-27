@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const fs = require("firebase-admin");
 // let taskStatus = require("./scripts/status");
@@ -16,7 +17,7 @@ const {
   FieldValue,
 } = require("firebase-admin/firestore");
 
-const PORT = process.port.env || 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 app.listen(PORT);
 app.use(express.json());
