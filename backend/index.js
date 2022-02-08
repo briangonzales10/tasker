@@ -1,9 +1,13 @@
 require("dotenv").config();
 const express = require("express");
+var cors = require('cors')
+const axios = require('axios')
+
 const fs = require("firebase-admin");
 // let taskStatus = require("./scripts/status");
 // import { Status } from "./scripts/status.js";
 let helper = require("./scripts/helper.js");
+let googlePlace = require("./scripts/googlePlace.js")
 const serviceAccount = require("./resources/taskerdb-11614-firebase-adminsdk-81hw6-ada33abc69.json");
 
 const {
@@ -26,6 +30,8 @@ app.use(
     extended: true,
   })
 );
+app.use(cors())
+
 
 //Open DB connection
 fs.initializeApp({
@@ -75,6 +81,7 @@ app.post("/add", async function (req, res) {
     },
     status: `OPEN`,
     picUrl: data.picUrl,
+    remarks: data.remarks
   };
   console.log(taskObject);
   tasklistCollection.add(taskObject);
@@ -109,3 +116,17 @@ app.put("/update/:taskId", async function (req, res) {
     res.status(400).send(`'${req.body.status}' is not a valid status!`);
   }
 });
+
+app.post("/places", async function (req, res) {
+  const data = req.body
+  console.log(req)
+  console.log(`Searching for: ${data.address}`)
+  if (!data) {
+    res.status(400).send("Must include address to search")
+  } else {
+    let results = await googlePlace.findFromAddress(data.address)
+    console.log(results)
+    res.status(200).send(results)
+  }
+
+})
