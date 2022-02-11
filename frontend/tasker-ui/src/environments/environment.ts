@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   googleApiKey: 'AIzaSyBRH1Dw3xk-UBAv2iZ56CFpIzlBJQV2Lyg',
   port: '3400',
+  backendUri: 'http://localhost:3000',
   firebase: {
     apiKey: "AIzaSyBRH1Dw3xk-UBAv2iZ56CFpIzlBJQV2Lyg",
     authDomain: "taskerdb-11614.firebaseapp.com",
