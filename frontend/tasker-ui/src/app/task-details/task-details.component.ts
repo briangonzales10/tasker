@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TasksService } from '../shared/services/tasks.service';
-import { BackendService } from '../shared/services/backend.service';
 import { TaskType } from '../shared/services/tasktype';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Observable } from 'rxjs';
@@ -12,6 +11,10 @@ import { Observable } from 'rxjs';
   styleUrls: ['./task-details.component.css']
 })
 export class TaskDetailsComponent implements OnInit {
+  @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow
+  infoContent = ''
+  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap
+
 
   //Task Data
   singleTask: TaskType[] = []
@@ -64,16 +67,12 @@ export class TaskDetailsComponent implements OnInit {
   geoCoder = new google.maps.Geocoder();
   addressResult: Observable<Object> | undefined;
 
-  @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow
-  infoContent = ''
-  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap
 
 
   constructor(
     private route: ActivatedRoute,
-    private tasksService: TasksService,
-    private backendService: BackendService
-  ) {
+    private tasksService: TasksService
+    ) {
   }
    
   ngOnInit(): void {
@@ -157,7 +156,7 @@ export class TaskDetailsComponent implements OnInit {
           console.log(this.address)
 
           
-          console.log(this.backendService.getInfoFromFormatedAddress(this.address))
+          console.log(this.tasksService.getInfoFromFormatedAddress(this.address))
           this.setInfo(this.address)
           
         }

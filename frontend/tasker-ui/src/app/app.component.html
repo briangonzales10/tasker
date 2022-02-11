@@ -1,3 +1,15 @@
 <app-navbar class="topnav" [title]="title"></app-navbar>
 <!-- <h1>{{title}}</h1> -->
+
+
 <router-outlet></router-outlet>
+
+<lib-toastify-toast-container
+[position]="'top-right'"
+[transition]="'slide'"
+[autoClose]="5000"
+[newestOnTop]="true"
+[closeOnClick]="true"
+[pauseOnHover]="true"
+[iconLibrary]="'font-awesome'"
+></lib-toastify-toast-container>

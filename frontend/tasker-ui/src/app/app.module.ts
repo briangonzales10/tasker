@@ -9,6 +9,7 @@ import { AuthGuard } from './shared/guard/auth.guard'
 import { environment } from '../environments/environment';
 import { AuthService } from './shared/services/auth.service'
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastService, AngularToastifyModule } from 'angular-toastify';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,6 +45,7 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    AngularToastifyModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: TasklistComponent },
@@ -56,7 +58,7 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
       { path: 'submit', component: SubmitTaskComponent, canActivate: [AuthGuard] }
     ])
   ],
-  providers: [AuthService],
+  providers: [AuthService, ToastService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

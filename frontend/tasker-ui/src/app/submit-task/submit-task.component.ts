@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap } from '@angular/google-maps';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BackendService } from '../shared/services/backend.service';
 import { SubmitDataLocation, SubmitTask } from '../shared/services/submit-task';
+import { ToastService } from 'angular-toastify';
+import { TasksService } from '../shared/services/tasks.service';
 
 @Component({
   selector: 'app-submit-task',
@@ -31,17 +32,14 @@ export class SubmitTaskComponent implements OnInit {
   zoom = 12;
 
   //Form Stuff
-public taskForm: FormGroup;
+  public taskForm: FormGroup;
 
-// taskname: string = '';
-// location: any;
-// remarks: string = '';
-// isPublic: boolean = true;
-uid: string = ''; //Will need to move this to a separate dataservice...
+  uid: string = ''; //Will need to move this to a separate dataservice...
 
   constructor(
     private fb: FormBuilder,
-    private backendService: BackendService
+    private toastService: ToastService,
+    private tasksService: TasksService
   ) {
       this.taskForm = this.fb.group({
         taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
@@ -112,10 +110,10 @@ uid: string = ''; //Will need to move this to a separate dataservice...
           uid: this.uid
       }
       
-      this.backendService.submitTaskToDB(postTask)
+      this.tasksService.submitTaskToDB(postTask)
       .subscribe({
         next: (res) => {
-          window.alert(res)
+          this.toastButton('success', res)
           console.log(res)
         },
         error: (err) => {
@@ -130,10 +128,22 @@ uid: string = ''; //Will need to move this to a separate dataservice...
 }
 
   resetForm() {
-    console.log(this.taskForm.value)
     this.taskForm.reset()
-    console.log("reset")
-    console.log(this.taskForm.value)
+  }
+
+  toastButton(type: string, msg: string) {
+
+    switch (type) {
+      case 'info': this.toastService.info(msg);
+        break;
+      case 'warn': this.toastService.warn(msg);
+        break;
+      case 'success': this.toastService.success(msg);
+        break;
+      case 'error': this.toastService.error(msg);
+        break;
+      default: this.toastService.info(msg)
+    }
   }
 
 }
