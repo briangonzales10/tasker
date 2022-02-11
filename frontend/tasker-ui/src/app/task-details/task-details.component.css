@@ -1,0 +1,12 @@
+.card {
+    width: 60vw;
+  
+}
+
+.map_container {
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    display: flex;
+}
+

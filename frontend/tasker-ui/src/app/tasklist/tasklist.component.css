@@ -1,0 +1,36 @@
+#cards_outer_container {
+    width: 80%;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+.tasklist_content_container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+@media screen and (max-width: 600px) {
+    #cards_outer_container {
+        width: 90%;
+        background-color: chartreuse;
+        flex-direction: column;
+        align-content: center;
+    }
+
+    .img-fluid {
+        height: 30vh;
+        min-width: 350px;
+    }
+
+    .card {
+        min-width: 350px;
+    }
+}
+
+
+/* .card-body {
+    height: 130px;
+} */
