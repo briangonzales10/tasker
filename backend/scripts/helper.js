@@ -25,3 +25,14 @@ exports.findStatus2 = function find(name) {
     return "NONE";
   }
 };
+
+exports.getBoolean = function getBoolean(stringValue) {
+  if (stringValue === 'true') {
+    return true;
+  }
+  else if (stringValue === 'false') {
+    return false;
+  } else {
+    return true;
+  }
+}

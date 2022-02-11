@@ -39,6 +39,7 @@ fs.initializeApp({
 });
 const db = fs.firestore();
 const tasklistCollection = db.collection("tasklist");
+const usersCollection = db.collection('users')
 
 //get (get all route)
 app.get("/tasks", async function (req, res) {
@@ -70,23 +71,63 @@ app.get("/task/:taskId", async function (req, res) {
 //add (post)
 app.post("/add", async function (req, res) {
   const data = req.body;
+
+  console.log(data)
+  console.log(req.body)
+
+  if (!data || !data.uid || !data.taskname || !data.location || data.isPublic == null) {
+    res.status(400).send('data not valid')
+    return;
+  }
+
+  let booleanIsPublic = helper.getBoolean(data.isPublic)
+
   let time = Timestamp.now();
 
   let taskObject = {
-    timestamp: time,
-    taskname: data.taskname,
-    location: {
+    timestamp: time, //backend derived
+    taskname: data.taskname, //front end
+    location: { //frontend
       latitude: data.location.latitude,
       longitude: data.location.longitude,
+      address: data.location.address
     },
-    status: `OPEN`,
-    picUrl: data.picUrl,
-    remarks: data.remarks
+    status: `OPEN`, //backend for new tasks of course
+    picUrl: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',//data.picUrl, //needs to be backend from pic URL service
+    remarks: data.remarks, //frontend
+    isPublic: booleanIsPublic, //frontend
+    isComplete: false,
+    submittedBy: data.uid //front end uuid of user & required update user Tasks
   };
   console.log(taskObject);
-  tasklistCollection.add(taskObject);
+  try {
+    let myTaskId;
+    let taskIdNew = await tasklistCollection.add(taskObject)
+      .then( (results) => {
+        console.log(results)
+        myTaskId = results.id
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    
+    usersCollection.doc(data.uid).update({
+      submittedTasks: FieldValue.arrayUnion(myTaskId) })
+      .then ((res) => {
+        console.log(res)
+      })
+      .catch( (err) => {
+        console.log(err)
+      })
+      
+    
+    res.status(200).send(`Thank You! Your task: "${data.taskname}" has been added!`);
+  } catch (error) {
+    console.warn(error)
+    res.status(400).send('task could not bet added because: ' + error)
+  }
 
-  res.status(200).send(`Task added: ${data.taskname}`);
+
 });
 
 //delete{id} delete route
@@ -128,5 +169,7 @@ app.post("/places", async function (req, res) {
     console.log(results)
     res.status(200).send(results)
   }
+
+
 
 })
