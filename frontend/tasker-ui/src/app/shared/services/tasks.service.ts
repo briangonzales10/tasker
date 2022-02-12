@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SubmitTask } from './submit-task';
 import { TaskType } from './tasktype';
 import { environment } from 'src/environments/environment';
+import { ToastService } from 'angular-toastify';
+import { GoogleMap, MapGeocoder } from '@angular/google-maps';
+
 
 
 @Injectable({
@@ -11,17 +14,30 @@ import { environment } from 'src/environments/environment';
 })
 export class TasksService {
 
+  NO_ADDRESS = "No Address Provided!"
+  NO_COORDS = "No coordinates provided!"
+
   taskList = []
   searchResult = {}
+  geoCoder = new google.maps.Geocoder();
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService) { }
 
   getTasks() {
-    return this.http.get<TaskType []>(`${environment.backendUri}/tasks`)
+    let userId
+    try {
+      userId = JSON.parse(localStorage.getItem('user') || '{}').uid
+    } catch (err) {
+      userId = "0"
+    }
+    return this.http.get<TaskType []>(`${environment.backendUri}/tasks/${userId}}`)
   }
 
   getSingleTask(taskId: string) {
-    return this.http.get<TaskType []>(`${environment.backendUri}/task/${taskId}`)
+    console.log("single task")
+    return this.http.get<TaskType>(`${environment.backendUri}/task/${taskId}`)
   }
 
 
@@ -31,7 +47,7 @@ export class TasksService {
 
   getInfoFromFormatedAddress(searchAddress: string) {
     if (!searchAddress) {
-      return {'result': 'no address provided'}
+      return this.toastService.error(this.NO_ADDRESS)
     }
 
     let postResponse;
@@ -46,5 +62,37 @@ export class TasksService {
       return this.searchResult
   }
 
+  async getTaskAddress(newlat: number, newlong: number) {
+    let address;
+    await this.geoCoder.geocode( {'location': {lat: newlat, lng: newlong }}, (results, status) => {
+      console.log("GEOCOdDE: " )
+      if (results !== null && status === 'OK') {
+        address = results[0]
+      }
+    })
+    return address;
+  }
+
+
+  async getCoords(address: string) {
+    let coords: any = {
+      lat: '',
+      lng: ''
+    };
+    await this.geoCoder.geocode({
+      'address': address
+    }, (results, status) => {
+      if (status === 'OK' && results != null) {
+        console.log(results[0].geometry.viewport)
+        coords = {
+         lat: results[0].geometry.location.lat(),
+         lng: results[0].geometry.location.lng()
+        };
+        console.log(coords)
+      };
+    });
+    
+    return coords;
+  }
 
 }

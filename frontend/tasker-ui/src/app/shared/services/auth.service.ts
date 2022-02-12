@@ -28,8 +28,6 @@ export class AuthService {
         this.loggedInUser = user;
         localStorage.setItem('user', JSON.stringify(this.loggedInUser))
         JSON.parse(localStorage.getItem('user') || '{}');
-        console.log("setting local storage: ")
-        // console.log(JSON.parse(localStorage.getItem('user') || '{}'))
       } else {
         localStorage.setItem('user', "") //can't set to null so setting to blank
         JSON.parse(localStorage.getItem('user') || '{}');

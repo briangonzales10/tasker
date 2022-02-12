@@ -84,16 +84,27 @@ export class SubmitTaskComponent implements OnInit {
     })
   }
 
-  submitTask() {
-  
+  async submitTask() {
+
+    let coords: any = {
+      lat: '',
+      lng: ''
+    }
+
+    try {
+        coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
+    } catch (err) {
+      console.warn("could not get coords")
+    }
+
     let userTaskname = this.taskForm.get('taskname')!.value;
     let userAddress = this.searchField.nativeElement.value;
     let userRemarks = this.taskForm.get('remarks')!.value;
     let userIsPublic = this.taskForm.get('isPublic')?.value!;
     let userLocation: SubmitDataLocation = {
       address: userAddress,
-      latitude: 0, //will update lat + long later
-      longitude: 0
+      latitude: coords.lat, //will update lat + long later
+      longitude: coords.lng
     }
 
     console.log("TaskName " + userTaskname)
@@ -102,6 +113,7 @@ export class SubmitTaskComponent implements OnInit {
 
     if (userTaskname !== null && userRemarks !== null) {
       
+
       const postTask: SubmitTask = {
           taskname: userTaskname,
           remarks: userRemarks,
@@ -117,7 +129,7 @@ export class SubmitTaskComponent implements OnInit {
           console.log(res)
         },
         error: (err) => {
-          window.alert(this.TASK_ADD_ERROR)
+          this.toastButton('error', this.TASK_ADD_ERROR)
           console.warn(err);
         
         }
