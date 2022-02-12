@@ -4,6 +4,7 @@ import { TasksService } from '../shared/services/tasks.service';
 import { TaskType } from '../shared/services/tasktype';
 import { GoogleMap, GoogleMapsModule, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Observable } from 'rxjs';
+import { ToastService } from 'angular-toastify';
 
 @Component({
   selector: 'app-task-details',
@@ -17,8 +18,9 @@ export class TaskDetailsComponent implements OnInit {
 
 
   //Task Data
-  singleTask: TaskType[] = []
+  singleTask!: TaskType
   mytask = {}
+  coords:any 
 
 
   //Google Maps stuff.
@@ -26,7 +28,7 @@ export class TaskDetailsComponent implements OnInit {
   myLat = 38; // Default lat long for map center is DC
   myLong = -76;
   myTaskName!: string;
-  address: string = '';
+  address: any = '';
 
   zoom = 15;
   center: google.maps.LatLngLiteral = {
@@ -64,24 +66,26 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   //GEOCODE Stuff
-  geoCoder = new google.maps.Geocoder();
+
   addressResult: Observable<Object> | undefined;
 
 
 
   constructor(
     private route: ActivatedRoute,
-    private tasksService: TasksService
+    private tasksService: TasksService,
+    public toastService: ToastService
     ) {
   }
    
-  ngOnInit(): void {
+  async ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
     const taskIdFromRoute = routeParams.get('taskId');
     if (taskIdFromRoute !== null) {
       this.tasksService.getSingleTask(taskIdFromRoute).subscribe((mdata => { 
         this.singleTask = mdata;
-        this.setMapData();
+        console.log("MY DATA: ")
+        console.log(this.singleTask)
         this.initMap();
       }))
     
@@ -116,26 +120,45 @@ export class TaskDetailsComponent implements OnInit {
     return "card mx-3 mb-3 " + cssClass;
   }
 
-  setMapData() {
-      this.myLat = this.singleTask[0].data.location.latitude;
-      this.myLong = this.singleTask[0].data.location.longitude;
-      this.myTaskName = this.singleTask[0].data.taskname;
-  }
-
-  initMap() {
-    this.center =  {
+  async initMap() {
+    let updatedCoords
+    
+    if (!this.singleTask.data.location.address) {
+      this.myLat = this.singleTask.data.location.latitude;
+      this.myLong = this.singleTask.data.location.longitude;
+    } else {
+      try {
+      updatedCoords = await this.tasksService.getCoords(this.singleTask.data.location.address)
+      this.myLat = updatedCoords.lat;
+      this.myLong = updatedCoords.lng;
+      } catch (err) {
+        console.warn(err)
+      }
+    }
+    this.center = {
       lat: this.myLat,
       lng: this.myLong
     }
-    this.markerPositions.push({lat: this.myLat, lng: this.myLong})
-    this.markerLabel.text = this.myTaskName;
-    try {
-    this.getTaskAddress(this.myLat, this.myLong);
+    this.markerPositions.push({
+      lat: this.myLat,
+      lng: this.myLong
+    })
 
+    this.myTaskName = this.singleTask.data.taskname;
+    console.log(this.myTaskName)
+
+    this.markerPositions.push({lat: this.myLat, lng: this.myLong})
+    this.markerLabel.text = this.singleTask.data.taskname
+    console.log("MARKER LABEL: ")
+    console.log(this.markerLabel.text)
+    try {
+    this.address = await this.tasksService.getTaskAddress(this.myLat, this.myLong);
+    console.log('address:')
+    console.log(this.address.formatted_address);
+    this.infoContent = this.address.formatted_address
     } catch (err) {
       console.log(err)
     }
-
   }
 
   openInfo(marker: MapMarker) {
@@ -145,23 +168,6 @@ export class TaskDetailsComponent implements OnInit {
   setInfo(content: string) {
     this.infoContent = content;
     console.log("INFO CONTENT: " + this.infoContent)
-
-  }
-  async getTaskAddress(newlat: number, newlong: number) {
-
-    await this.geoCoder.geocode( {'location': {lat: newlat, lng: newlong }}, (results, status) => {
-      if (status === 'OK' && results != null) {
-        if (results[0]) {
-          this.address = results[0].formatted_address;
-          console.log(this.address)
-
-          
-          console.log(this.tasksService.getInfoFromFormatedAddress(this.address))
-          this.setInfo(this.address)
-          
-        }
-      }
-    } )
 
   }
 }

@@ -1,10 +1,10 @@
 <div *ngIf="singleTask">
 
 
-<div *ngFor="let task of singleTask" [ngClass]="getCSSforStatus( task.data.status )" >
+<div [ngClass]="getCSSforStatus( singleTask.data.status )" >
     <div class=card-header><p>View Task Details</p></div>
     <div class="card-body text-dark">
-      <h4 class="card-title">{{ task.data.taskname }}</h4>
+      <h4 class="card-title">{{ singleTask.data.taskname }}</h4>
         <div class="map_container">
             <google-map
             
@@ -25,9 +25,9 @@
         </google-map>
         </div>
       
-      <p class="card-text">Status: {{ task.data.status }}</p>
+      <p class="card-text">Status: {{ singleTask.data.status }}</p>
 
-      <p class="card-text">{{ task.data.remarks }}</p>
-      <p class="card-text"><small class="text-muted">Submitted on: {{ task.data.timestamp._seconds * 1000 | date:'MM-dd-yyyy' }}</small></p>
+      <p class="card-text">{{ singleTask.data.remarks }}</p>
+      <p class="card-text"><small class="text-muted">Submitted on: {{ singleTask.data.timestamp._seconds * 1000 | date:'MM-dd-yyyy' }}</small></p>
 </div>
 </div>

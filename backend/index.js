@@ -1,25 +1,17 @@
 require("dotenv").config();
+
 const express = require("express");
 var cors = require('cors')
 const axios = require('axios')
+const collection = require('./scripts/firestoreHelper')
 
-const fs = require("firebase-admin");
-// let taskStatus = require("./scripts/status");
-// import { Status } from "./scripts/status.js";
 let helper = require("./scripts/helper.js");
 let googlePlace = require("./scripts/googlePlace.js")
-const serviceAccount = require("./resources/taskerdb-11614-firebase-adminsdk-81hw6-ada33abc69.json");
+let getService = require('./service/getService')
 
-const {
-  initializeApp,
-  applicationDefault,
-  cert,
-} = require("firebase-admin/app");
-const {
-  getFirestore,
-  Timestamp,
-  FieldValue,
-} = require("firebase-admin/firestore");
+
+
+const NO_TASKS = "No Tasks Available!"
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -33,35 +25,32 @@ app.use(
 app.use(cors())
 
 
-//Open DB connection
-fs.initializeApp({
-  credential: fs.credential.cert(serviceAccount),
-});
-const db = fs.firestore();
-const tasklistCollection = db.collection("tasklist");
-const usersCollection = db.collection('users')
-
 //get (get all route)
-app.get("/tasks", async function (req, res) {
-  let tasks = [];
-  const snapshot = tasklistCollection.orderBy("timestamp").get();
-  (await snapshot).forEach((doc) => {
-    console.log(doc.id, "=>", doc.data());
-    tasks.push({ taskid: doc.id, data: doc.data() });
-  });
-  console.log(`# of Tasks found: ${tasks.length}`);
-  res.send(tasks);
+app.get("/tasks/:id", async function (req, res) {
+
+  try {
+   let tasks = await getService.getTasks(req.params.id)
+    res.status(200).send(tasks)
+    console.log('# of Tasks:' + tasks.length)
+
+  } catch (err) {
+    console.warn(err)
+    res.status(400).send(NO_TASKS)
+  }
+  
+
+
 });
 
 //task (get single)
 app.get("/task/:taskId", async function (req, res) {
-  let tasks = [];
+  let task;
   try {
-    const singleTask = await tasklistCollection.doc(req.params.taskId).get();
+    const singleTask = await collection.tasklist.doc(req.params.taskId).get();
 
-    tasks.push({ taskid: singleTask.id, data: singleTask.data() });
+    task = { taskid: singleTask.id, data: singleTask.data() };
 
-    res.status(200).send(tasks);
+    res.status(200).send(task);
   } catch (err) {
     console.log(err);
     res.status(404).send(`Task not found for task ID: ${req.params.taskId}`);
@@ -102,7 +91,7 @@ app.post("/add", async function (req, res) {
   console.log(taskObject);
   try {
     let myTaskId;
-    let taskIdNew = await tasklistCollection.add(taskObject)
+    let taskIdNew = await collection.tasklist.add(taskObject)
       .then( (results) => {
         console.log(results)
         myTaskId = results.id
@@ -111,7 +100,7 @@ app.post("/add", async function (req, res) {
         console.log(err)
       })
     
-    usersCollection.doc(data.uid).update({
+    collection.users.doc(data.uid).update({
       submittedTasks: FieldValue.arrayUnion(myTaskId) })
       .then ((res) => {
         console.log(res)
@@ -134,19 +123,19 @@ app.post("/add", async function (req, res) {
 app.delete("/delete/:taskId", async function (req, res) {
   const taskIdToDelete = req.params.taskId;
   console.log(taskIdToDelete);
-  await tasklistCollection.doc(taskIdToDelete).delete();
+  await collection.tasklist.doc(taskIdToDelete).delete();
   res.status(200).send("Task Deleted");
 });
 
 //Update Path /update to change status to complete
 app.put("/update/:taskId", async function (req, res) {
   const taskIdToUpdate = req.params.taskId;
-  const snapshot = await tasklistCollection.doc(taskIdToUpdate).get();
+  const snapshot = await collection.tasklist.doc(taskIdToUpdate).get();
   let reqStatusChange = req.body.status;
 
   let updateStatus = helper.findStatus(reqStatusChange);
   if (updateStatus !== "NONE") {
-    await tasklistCollection
+    await collection.tasklist
       .doc(taskIdToUpdate)
       .update({ status: updateStatus });
 
