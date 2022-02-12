@@ -1,17 +1,15 @@
 require("dotenv").config();
 
 const express = require("express");
-var cors = require('cors')
-const axios = require('axios')
-const collection = require('./scripts/firestoreHelper')
+var cors = require("cors");
+const axios = require("axios");
+const collection = require("./scripts/firestoreHelper");
 
 let helper = require("./scripts/helper.js");
-let googlePlace = require("./scripts/googlePlace.js")
-let getService = require('./service/getService')
+let googlePlace = require("./scripts/googlePlace.js");
+let getService = require("./service/getService");
 
-
-
-const NO_TASKS = "No Tasks Available!"
+const NO_TASKS = "No Tasks Available!";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -22,24 +20,18 @@ app.use(
     extended: true,
   })
 );
-app.use(cors())
-
+app.use(cors());
 
 //get (get all route)
 app.get("/tasks/:id", async function (req, res) {
-
   try {
-   let tasks = await getService.getTasks(req.params.id)
-    res.status(200).send(tasks)
-    console.log('# of Tasks:' + tasks.length)
-
+    let tasks = await getService.getTasks(req.params.id);
+    res.status(200).send(tasks);
+    console.log("# of Tasks:" + tasks.length);
   } catch (err) {
-    console.warn(err)
-    res.status(400).send(NO_TASKS)
+    console.warn(err);
+    res.status(400).send(NO_TASKS);
   }
-  
-
-
 });
 
 //task (get single)
@@ -61,68 +53,80 @@ app.get("/task/:taskId", async function (req, res) {
 app.post("/add", async function (req, res) {
   const data = req.body;
 
-  console.log(data)
-  console.log(req.body)
+  console.log(data);
+  console.log(req.body);
 
-  if (!data || !data.uid || !data.taskname || !data.location || data.isPublic == null) {
-    res.status(400).send('data not valid')
+  if (
+    !data ||
+    !data.uid ||
+    !data.taskname ||
+    !data.location ||
+    data.isPublic == null
+  ) {
+    res.status(400).send("data not valid");
     return;
   }
 
-  let booleanIsPublic = helper.getBoolean(data.isPublic)
+  let booleanIsPublic = helper.getBoolean(data.isPublic);
 
   let time = Timestamp.now();
 
   let taskObject = {
     timestamp: time, //backend derived
     taskname: data.taskname, //front end
-    location: { //frontend
+    location: {
+      //frontend
       latitude: data.location.latitude,
       longitude: data.location.longitude,
-      address: data.location.address
+      address: data.location.address,
     },
     status: `OPEN`, //backend for new tasks of course
-    picUrl: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',//data.picUrl, //needs to be backend from pic URL service
+    picUrl:
+      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80", //data.picUrl, //needs to be backend from pic URL service
     remarks: data.remarks, //frontend
     isPublic: booleanIsPublic, //frontend
     isComplete: false,
-    submittedBy: data.uid //front end uuid of user & required update user Tasks
+    submittedBy: data.uid, //front end uuid of user & required update user Tasks
   };
   console.log(taskObject);
   try {
     let myTaskId;
-    let taskIdNew = await collection.tasklist.add(taskObject)
-      .then( (results) => {
-        console.log(results)
-        myTaskId = results.id
+    let taskIdNew = await collection.tasklist
+      .add(taskObject)
+      .then((results) => {
+        console.log(results);
+        myTaskId = results.id;
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
+      });
+
+    collection.users
+      .doc(data.uid)
+      .update({
+        submittedTasks: FieldValue.arrayUnion(myTaskId),
       })
-    
-    collection.users.doc(data.uid).update({
-      submittedTasks: FieldValue.arrayUnion(myTaskId) })
-      .then ((res) => {
-        console.log(res)
+      .then((res) => {
+        console.log(res);
       })
-      .catch( (err) => {
-        console.log(err)
-      })
-      
-    
-    res.status(200).send(`Thank You! Your task: "${data.taskname}" has been added!`);
+      .catch((err) => {
+        console.log(err);
+      });
+
+    res
+      .status(200)
+      .send(`Thank You! Your task: "${data.taskname}" has been added!`);
   } catch (error) {
-    console.warn(error)
-    res.status(400).send('task could not bet added because: ' + error)
+    console.warn(error);
+    res.status(400).send("task could not bet added because: " + error);
   }
-
-
 });
 
 //delete{id} delete route
 app.delete("/delete/:taskId", async function (req, res) {
   const taskIdToDelete = req.params.taskId;
-  console.log(taskIdToDelete);
+
+  console.log("DELETING TASK: " + taskIdToDelete);
   await collection.tasklist.doc(taskIdToDelete).delete();
   res.status(200).send("Task Deleted");
 });
@@ -148,17 +152,14 @@ app.put("/update/:taskId", async function (req, res) {
 });
 
 app.post("/places", async function (req, res) {
-  const data = req.body
-  console.log(req)
-  console.log(`Searching for: ${data.address}`)
+  const data = req.body;
+  console.log(req);
+  console.log(`Searching for: ${data.address}`);
   if (!data) {
-    res.status(400).send("Must include address to search")
+    res.status(400).send("Must include address to search");
   } else {
-    let results = await googlePlace.findFromAddress(data.address)
-    console.log(results)
-    res.status(200).send(results)
+    let results = await googlePlace.findFromAddress(data.address);
+    console.log(results);
+    res.status(200).send(results);
   }
-
-
-
-})
+});

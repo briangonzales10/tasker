@@ -1,33 +1,158 @@
-<div *ngIf="singleTask">
-
-
-<div [ngClass]="getCSSforStatus( singleTask.data.status )" >
-    <div class=card-header><p>View Task Details</p></div>
-    <div class="card-body text-dark">
-      <h4 class="card-title">{{ singleTask.data.taskname }}</h4>
-        <div class="map_container">
-            <google-map
-            
-            [zoom]="zoom"
-            [center]="center"
-            [options]="options">
-            <map-marker
+<div *ngIf="singleTask" class="form_container_large">
+  <div class="details_container shadow p-3 w-70 mb-5 bg-body rounded">
+    <div class="details_header mb-3">
+      <div id="details_header_title">
+        <h3>{{ singleTask.data.taskname }}</h3>
+      </div>
+      <div *ngIf="isAdmin" id="details_header_adminControl">
+        <button
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal"
+        >
+          Delete Task
+        </button>
+        <button
+          class="btn btn-secondary mx-1"
+          data-bs-toggle="modal"
+          data-bs-target="#statusModal"
+        >
+          Change Status
+        </button>
+      </div>
+    </div>
+    <div class="details_body">
+      <div class="map_container">
+        <google-map [zoom]="zoom" [center]="center" [options]="options">
+          <map-marker
             #somemarker="mapMarker"
             *ngFor="let marker of markerPositions"
             [position]="marker"
-            [options]="markerOptions" 
+            [options]="markerOptions"
             [label]="markerLabel"
             (mapClick)="openInfo(somemarker)"
-            >
-            
-            </map-marker>
-            <map-info-window>{{ infoContent }}</map-info-window>
+          >
+          </map-marker>
+          <map-info-window>{{ infoContent }}</map-info-window>
         </google-map>
-        </div>
-      
+      </div>
       <p class="card-text">Status: {{ singleTask.data.status }}</p>
 
       <p class="card-text">{{ singleTask.data.remarks }}</p>
-      <p class="card-text"><small class="text-muted">Submitted on: {{ singleTask.data.timestamp._seconds * 1000 | date:'MM-dd-yyyy' }}</small></p>
+      <p class="card-text">
+        <small class="text-muted"
+          >Submitted on:
+          {{
+            singleTask.data.timestamp._seconds * 1000 | date: "MM-dd-yyyy"
+          }}</small
+        >
+      </p>
+    </div>
+  </div>
 </div>
+
+<div
+  class="modal fade"
+  id="statusModal"
+  tabindex="-1"
+  aria-labelledby="Edit Task Status"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">
+          Delete Task Confirmation
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Select Updated Status</p>
+
+        <button
+          type="button"
+          class="btn btn-info mx-1"
+          (click)="statusChange('open')"
+          data-bs-dismiss="modal"
+        >
+          Open
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="statusChange('complete')"
+          data-bs-dismiss="modal"
+        >
+          Completed
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger mx-1"
+          (click)="statusChange('rejected')"
+          data-bs-dismiss="modal"
+        >
+          Reject
+        </button>
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="statusChange('abandon')"
+          data-bs-dismiss="modal"
+        >
+          Abandon
+        </button>
+      </div>
+      <div class="modal-footer mx-1">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="Delete Task Confirmation"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+          Delete Task Confirmation
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        You are about to delete this task, are you sure?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="deleteConfirm()"
+          data-bs-dismiss="modal"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
