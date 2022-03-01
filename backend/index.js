@@ -25,7 +25,7 @@ app.use(cors());
 //get (get all route)
 app.get("/tasks/:id", async function (req, res) {
   console.log(req.headers)
-
+  console.log(req.params.id)
   try {
     let tasks = await getService.getTasks(req.params.id);
     res.status(200).send(tasks);
@@ -39,9 +39,11 @@ app.get("/tasks/:id", async function (req, res) {
 //get all tasks for 1 user
 app.get("/mytasks/:id", async function (req, res) {
   console.log(req.headers)
-
+  console.log(req)
+  console.log(req.params.id)
   try {
     let tasks = await getService.getUserTasks(req.params.id);
+    console.log(tasks)
     res.status(200).send(tasks);
     console.log("# of Tasks:" + tasks.length);
   } catch (err) {
@@ -53,8 +55,9 @@ app.get("/mytasks/:id", async function (req, res) {
 //task (get single)
 app.get("/task/:taskId", async function (req, res) {
   let task;
+  console.log(req)
   try {
-    task = await getService.getSingleTask(req.params.id);
+    task = await getService.getSingleTask(req.params.taskId);
 
     res.status(200).send(task);
   } catch (err) {
