@@ -22,6 +22,7 @@ import { environment } from 'src/environments/environment';
 export class TaskDetailsComponent implements OnInit {
   TASK_DELETED: string = 'Task Deleted!';
   TASK_UPDATED: string = 'Task has been updated!';
+  TASK_ERROR: string = 'Sorry! Something went wrong';
 
   @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow;
   infoContent = '';
@@ -51,18 +52,8 @@ export class TaskDetailsComponent implements OnInit {
     maxZoom: 20,
     minZoom: 1,
   };
-  svgPath =
-    'M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z';
-  svgMarker = {
-    path: this.svgPath,
-    fillColor: 'red',
-    fillOpacity: 0.9,
-    strokeWeight: 1,
-    rotation: 0,
-    scale: 1.5,
-    //anchor: new google.maps.Point(0, 0),
-    labelOrigin: new google.maps.Point(15, -10),
-  };
+
+  svgMarker = this.pinSymbol('red');
 
   markerOptions: google.maps.MarkerOptions = {
     draggable: false,
@@ -94,39 +85,20 @@ export class TaskDetailsComponent implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     const taskIdFromRoute = routeParams.get('taskId');
     if (taskIdFromRoute !== null) {
-      this.tasksService.getSingleTask(taskIdFromRoute).subscribe((mdata) => {
-        this.singleTask = mdata;
-        console.log('MY DATA: ');
-        console.log(this.singleTask);
-        this.initMap();
-      });
+      this.tasksService.getSingleTask(taskIdFromRoute)
+      .subscribe({
+        next: (mdata) => {
+          this.singleTask = mdata;
+          console.log('MY DATA: ');
+          console.log(this.singleTask);
+          this.initMap();
+        },
+        error: (err) => {
+          console.warn(err)
+          this.toastService.error(this.TASK_ERROR)
+        }
+      })
     }
-  }
-
-  getCSSforStatus(status: string) {
-    let cssClass;
-    switch (status.toLowerCase()) {
-      case 'open':
-        cssClass = 'border-dark';
-        break;
-
-      case 'complete':
-        cssClass = 'border-success';
-        break;
-
-      case 'rejected':
-        cssClass = 'border-danger';
-        break;
-
-      case 'abandonded':
-        cssClass = 'border-warning';
-        break;
-
-      default:
-        cssClass = 'border-dark';
-    }
-
-    return 'card mx-3 mb-3 ' + cssClass;
   }
 
   async initMap() {
@@ -160,8 +132,7 @@ export class TaskDetailsComponent implements OnInit {
 
     this.markerPositions.push({ lat: this.myLat, lng: this.myLong });
     this.markerLabel.text = this.singleTask.data.taskname;
-    console.log('MARKER LABEL: ');
-    console.log(this.markerLabel.text);
+
     try {
       this.address = await this.tasksService.getTaskAddress(
         this.myLat,
@@ -205,5 +176,44 @@ export class TaskDetailsComponent implements OnInit {
       updatedStatus
     );
     this.toastService.info(this.TASK_UPDATED);
+  }
+
+  pinSymbol(color: string) {
+    return {
+        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: '#000',
+        strokeWeight: 2,
+        scale: 1,
+        // anchor: new google.maps.Point(10, 34),
+        labelOrigin: new google.maps.Point(15, 15),
+   };
+  }
+
+  getCSSforStatus(status: string) {
+    let cssClass;
+    switch (status.toLowerCase()) {
+      case 'open':
+        cssClass = 'border-dark';
+        break;
+
+      case 'complete':
+        cssClass = 'border-success';
+        break;
+
+      case 'rejected':
+        cssClass = 'border-danger';
+        break;
+
+      case 'abandonded':
+        cssClass = 'border-warning';
+        break;
+
+      default:
+        cssClass = 'border-dark';
+    }
+
+    return 'card mx-3 mb-3 ' + cssClass;
   }
 }

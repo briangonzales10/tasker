@@ -57,7 +57,6 @@ export class AuthService {
    }
 
    get isLoggedIn(): boolean {
-    console.log("+1")
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.email) {
       return true;
