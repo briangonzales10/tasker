@@ -24,8 +24,24 @@ app.use(cors());
 
 //get (get all route)
 app.get("/tasks/:id", async function (req, res) {
+  console.log(req.headers)
+
   try {
     let tasks = await getService.getTasks(req.params.id);
+    res.status(200).send(tasks);
+    console.log("# of Tasks:" + tasks.length);
+  } catch (err) {
+    console.warn(err);
+    res.status(400).send(NO_TASKS);
+  }
+});
+
+//get all tasks for 1 user
+app.get("/mytasks/:id", async function (req, res) {
+  console.log(req.headers)
+
+  try {
+    let tasks = await getService.getUserTasks(req.params.id);
     res.status(200).send(tasks);
     console.log("# of Tasks:" + tasks.length);
   } catch (err) {
@@ -38,9 +54,7 @@ app.get("/tasks/:id", async function (req, res) {
 app.get("/task/:taskId", async function (req, res) {
   let task;
   try {
-    const singleTask = await collection.tasklist.doc(req.params.taskId).get();
-
-    task = { taskid: singleTask.id, data: singleTask.data() };
+    task = await getService.getSingleTask(req.params.id);
 
     res.status(200).send(task);
   } catch (err) {
@@ -66,59 +80,13 @@ app.post("/add", async function (req, res) {
     res.status(400).send("data not valid");
     return;
   }
-
-  let booleanIsPublic = helper.getBoolean(data.isPublic);
-
-  let time = Timestamp.now();
-
-  let taskObject = {
-    timestamp: time, //backend derived
-    taskname: data.taskname, //front end
-    location: {
-      //frontend
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
-      address: data.location.address,
-    },
-    status: `OPEN`, //backend for new tasks of course
-    picUrl:
-      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80", //data.picUrl, //needs to be backend from pic URL service
-    remarks: data.remarks, //frontend
-    isPublic: booleanIsPublic, //frontend
-    isComplete: false,
-    submittedBy: data.uid, //front end uuid of user & required update user Tasks
-  };
-  console.log(taskObject);
   try {
-    let myTaskId;
-    let taskIdNew = await collection.tasklist
-      .add(taskObject)
-      .then((results) => {
-        console.log(results);
-        myTaskId = results.id;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await getService.submitTask(data)
 
-    collection.users
-      .doc(data.uid)
-      .update({
-        submittedTasks: FieldValue.arrayUnion(myTaskId),
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    res
-      .status(200)
-      .send(`Thank You! Your task: "${data.taskname}" has been added!`);
+    res.status(200).send(`Thank You! Your task: "${data.taskname}" has been added!`);
   } catch (error) {
     console.warn(error);
-    res.status(400).send("task could not bet added because: " + error);
+    res.status(400).send("task could not bet added");
   }
 });
 

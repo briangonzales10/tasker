@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SubmitDataLocation, SubmitTask } from '../shared/services/submit-task';
 import { ToastService } from 'angular-toastify';
 import { TasksService } from '../shared/services/tasks.service';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-submit-task',
@@ -39,7 +40,8 @@ export class SubmitTaskComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastService: ToastService,
-    private tasksService: TasksService
+    private tasksService: TasksService,
+    private authService: AuthService
   ) {
       this.taskForm = this.fb.group({
         taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
@@ -86,6 +88,8 @@ export class SubmitTaskComponent implements OnInit {
 
   async submitTask() {
 
+    const userToken = await this.authService.getToken();
+
     let coords: any = {
       lat: '',
       lng: ''
@@ -119,7 +123,8 @@ export class SubmitTaskComponent implements OnInit {
           remarks: userRemarks,
           location: userLocation,
           isPublic: userIsPublic,
-          uid: this.uid
+          uid: this.uid,
+          tokenId: userToken
       }
       
       this.tasksService.submitTaskToDB(postTask)

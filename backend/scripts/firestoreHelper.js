@@ -20,4 +20,3 @@ fs.initializeApp({
 
   exports.tasklist = tasklistCollection = db.collection("tasklist");
   exports.users =  usersCollection = db.collection('users')
-  

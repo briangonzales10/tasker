@@ -21,8 +21,8 @@ export class TasklistComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getPublicTasks() {
-    this.taskService.getTasks()
+  async getPublicTasks() {
+    (await this.taskService.getTasks())
     .subscribe({
       next: (results => {
         console.log(results)
