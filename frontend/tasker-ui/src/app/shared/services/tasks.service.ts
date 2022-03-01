@@ -44,7 +44,28 @@ export class TasksService {
       userId = '0';
     }
     return this.http.get<TaskType[]>(
-      `${environment.backendUri}/tasks/${userId}}`, ReqOptions
+      `${environment.backendUri}/tasks/${userId}`, ReqOptions
+    );
+  }
+
+  async getUserTasks() {
+    let userToken = await this.authService.getToken();
+    let headers = {
+      'Authorization': userToken,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+    let ReqOptions = {
+      headers: new HttpHeaders(headers)
+    };
+    let userId;
+    try {
+      userId = JSON.parse(localStorage.getItem('user') || '{}').uid;
+    } catch (err) {
+      userId = '0';
+    }
+    return this.http.get<TaskType[]>(
+      `${environment.backendUri}/mytasks/${userId}`, ReqOptions
     );
   }
 
