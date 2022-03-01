@@ -1,11 +1,11 @@
 import { Injectable, Output } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SubmitTask } from './submit-task';
 import { TaskType } from './tasktype';
 import { environment } from 'src/environments/environment';
 import { ToastService } from 'angular-toastify';
-import { GoogleMap, MapGeocoder } from '@angular/google-maps';
+
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -27,7 +27,16 @@ export class TasksService {
     public authService: AuthService
   ) {}
 
-  getTasks() {
+  async getTasks() {
+    let userToken = await this.authService.getToken();
+    let headers = {
+      'Authorization': userToken,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+    let ReqOptions = {
+      headers: new HttpHeaders(headers)
+    };
     let userId;
     try {
       userId = JSON.parse(localStorage.getItem('user') || '{}').uid;
@@ -35,7 +44,7 @@ export class TasksService {
       userId = '0';
     }
     return this.http.get<TaskType[]>(
-      `${environment.backendUri}/tasks/${userId}}`
+      `${environment.backendUri}/tasks/${userId}}`, ReqOptions
     );
   }
 
@@ -46,7 +55,7 @@ export class TasksService {
 
   submitTaskToDB(userTask: SubmitTask): Observable<string> {
     return this.http.post(`${environment.backendUri}/add`, userTask, {
-      responseType: 'text',
+      responseType: 'text'
     });
   }
 
@@ -64,6 +73,12 @@ export class TasksService {
       console.log(this.authService.loggedInUser.uid);
       return;
     }
+
+    // let user = this.authService.getToken()
+    //   .subscribe({
+    //     next: (userData) => { userData?.token }
+    //   })
+
     console.log(`deleting task ${id}`);
     let response = await this.http.delete(
       `${environment.backendUri}/delete/${id}`
@@ -168,4 +183,5 @@ export class TasksService {
 
     return coords;
   }
+
 }

@@ -23,6 +23,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { SubmitTaskComponent } from './submit-task/submit-task.component';
+import { MyTasksComponent } from './components/my-tasks/my-tasks.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
     ForgotPasswordComponent,
     VerifyEmailComponent,
     UserSettingsComponent,
-    SubmitTaskComponent
+    SubmitTaskComponent,
+    MyTasksComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,7 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
       { path: 'register', component: RegisterComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'verify-email-address', component: VerifyEmailComponent },
+      { path: 'my-tasks', component: MyTasksComponent, canActivate: [AuthGuard] },
       { path: 'user-settings', component: UserSettingsComponent, canActivate: [AuthGuard] },
       { path: 'submit', component: SubmitTaskComponent, canActivate: [AuthGuard] }
     ])

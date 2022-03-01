@@ -5,6 +5,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import { Router } from "@angular/router";
 // import firebase from 'firebase/compat';
 import firebase from 'firebase/compat/app';
+import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 
 
 @Injectable({
@@ -14,6 +15,7 @@ export class AuthService {
 
   loggedInUser: any;
   userMessage: string = '';
+  securityToken: any = '';
 
   constructor(
     public fs: AngularFirestore,
@@ -140,6 +142,14 @@ export class AuthService {
         console.log("removed user")
         this.router.navigate(['/'])
       })
+   }
+
+   async getToken() {
+    let token = this.fAuth.idTokenResult
+    .subscribe({
+      next:  (token) => this.securityToken = token
+    })
+    return this.securityToken;
    }
 
    googleAuth() {
