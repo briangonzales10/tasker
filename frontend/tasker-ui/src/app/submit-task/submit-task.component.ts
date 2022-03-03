@@ -127,19 +127,8 @@ export class SubmitTaskComponent implements OnInit {
           tokenId: userToken
       }
       
-      this.tasksService.submitTaskToDB(postTask)
-      .subscribe({
-        next: (res) => {
-          this.toastButton('success', res)
-          console.log(res)
-        },
-        error: (err) => {
-          this.toastButton('error', this.TASK_ADD_ERROR)
-          console.warn(err);
-        
-        }
-      });  
-
+  let response = await this.tasksService.submitTaskToDB(postTask);
+      response.subscribe( res => this.toastButton('info', res))
   }
   this.resetForm();
 }

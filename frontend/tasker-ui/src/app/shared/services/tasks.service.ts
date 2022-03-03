@@ -1,12 +1,11 @@
-import { Injectable, Output } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SubmitTask } from './submit-task';
 import { TaskType } from './tasktype';
-import { environment } from 'src/environments/environment';
 import { ToastService } from 'angular-toastify';
 
 import { AuthService } from './auth.service';
+import { BackendService } from './backend.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,193 +15,163 @@ export class TasksService {
   NO_COORDS = 'No coordinates provided!';
   NO_ID_PROVIDED = 'No Id was provided';
   NO_ACCESS = 'You do not have permission to do this!';
+  TASK_NOT_FOUND = "Task not found!";
+  TASK_UPDATED = 'Task Updated!';
+  TASK_DELETE_SUCCESS = 'Task Deleted Successfully!';
 
   taskList = [];
   searchResult = {};
   geoCoder = new google.maps.Geocoder();
+  userTaskCount: number = 0;
+  publicTaskCount: number = 0;
+
+  private userTaskStore: BehaviorSubject<Array<TaskType>> = new BehaviorSubject(Array<TaskType>());
+  public readonly userTasks: Observable<Array<TaskType>> = this.userTaskStore.asObservable();
+
+  private allTaskStore: BehaviorSubject<Array<TaskType>> = new BehaviorSubject(Array<TaskType>());
+  public readonly allTasks: Observable<Array<TaskType>> = this.allTaskStore.asObservable();
 
   constructor(
-    private http: HttpClient,
+    private backendService: BackendService,
     private toastService: ToastService,
     public authService: AuthService
-  ) {}
-
-  async getTasks() {
-    let userToken = await this.authService.getToken();
-    let headers = {
-      'Authorization': userToken,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-    let ReqOptions = {
-      headers: new HttpHeaders(headers)
-    };
-    let userId;
-    try {
-      userId = JSON.parse(localStorage.getItem('user') || '{}').uid;
-    } catch (err) {
-      userId = '0';
-    }
-    return this.http.get<TaskType[]>(
-      `${environment.backendUri}/tasks/${userId}`, ReqOptions
-    );
+  ) {
+    this.loadInitData();
   }
 
-  async getUserTasks() {
-    let userToken = await this.authService.getToken();
-    let headers = {
-      'Authorization': userToken,
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    }
-    let ReqOptions = {
-      headers: new HttpHeaders(headers)
-    };
-    let userId;
-    try {
-      userId = JSON.parse(localStorage.getItem('user') || '{}').uid;
-    } catch (err) {
-      userId = '0';
-    }
-    return this.http.get<TaskType[]>(
-      `${environment.backendUri}/mytasks/${userId}`, ReqOptions
-    );
+  loadInitData() {
+    //Load All Available
+    this.getTasks();
+    //Load All User Tasks
+    this.getUserTasks();
   }
 
-  getSingleTask(taskId: string) {
-    console.log('single task');
-    return this.http.get<TaskType>(`${environment.backendUri}/task/${taskId}`);
+  private getTasks() {
+    this.backendService.getTasks().subscribe(
+        (res) => {
+          this.allTaskStore.next(res);
+          console.log(res)
+        }
+    )
   }
 
-  submitTaskToDB(userTask: SubmitTask): Observable<string> {
-    return this.http.post(`${environment.backendUri}/add`, userTask, {
-      responseType: 'text'
-    });
+  private getUserTasks() {
+    this.backendService.getUserTasks().subscribe(
+      (res) => this.userTaskStore.next(res)
+    )
   }
 
-  async deleteTask(id: string) {
-    if (!id) {
-      console.warn(this.NO_ID_PROVIDED);
-      return;
-    }
-    if (
-      this.authService.isLoggedIn === false ||
-      this.authService.loggedInUser.uid !== environment.adminUid
-    ) {
-      console.warn(this.NO_ACCESS);
-      console.log(this.authService.isLoggedIn);
-      console.log(this.authService.loggedInUser.uid);
-      return;
-    }
-
-    // let user = this.authService.getToken()
-    //   .subscribe({
-    //     next: (userData) => { userData?.token }
-    //   })
-
-    console.log(`deleting task ${id}`);
-    let response = await this.http.delete(
-      `${environment.backendUri}/delete/${id}`
-    );
-    response.subscribe({
-      next: (res) => {
-        console.log('!!!response:' + res);
-      },
-      error: (err) => console.warn(err),
-    });
-  }
-
-  async updateTask(taskId: string, updatedStatus: string) {
-    if (!taskId) {
-      console.warn(this.NO_ID_PROVIDED);
-      return;
-    }
-    if (
-      this.authService.isLoggedIn === false ||
-      this.authService.loggedInUser.uid !== environment.adminUid
-    ) {
-      console.warn(this.NO_ACCESS);
-      console.log(this.authService.isLoggedIn);
-      console.log(this.authService.loggedInUser.uid);
-      return;
-    }
-
-    const status = {
-      status: updatedStatus,
-    };
-
-    let response = this.http.put(
-      `${environment.backendUri}/update/${taskId}`,
-      status,
-      {
-        responseType: 'text',
+  getSingleTask(reqtaskId: string):TaskType | undefined {
+    this.allTasks.subscribe(res => res.forEach(
+      task => {
+        if (reqtaskId == task.taskid) {
+          return task;
+        } else {
+          return;
+        }
       }
-    );
-    response.subscribe({
-      next: (res) => {
-        console.log('!!!response:' + res);
-      },
-      error: (err) => console.warn(err),
+    ));
+
+    this.userTasks.subscribe(res => res.forEach(
+      task => {
+        if (reqtaskId == task.taskid) {
+          return task;
+        } else {
+          return;
+        }
+      }
+    ));
+    return undefined;
+  }
+
+  async submitTaskToDB(userTask: SubmitTask): Promise<Observable<string>> {
+    let response = await this.backendService.submitTaskToDB(userTask);
+
+    //Data submitted to server is not same as response so we can't load directly to dataStore
+    this.loadInitData();
+
+    return response;
+  }
+
+  async deleteTask(reqTaskId: string) {
+    let taskFound = false;
+
+    this.allTasks.subscribe(res =>  { 
+      taskFound = this.genericDelete(reqTaskId, res, this.allTaskStore);
     });
+
+    if (!taskFound) {
+      this.userTasks.subscribe(res =>  { 
+        taskFound = this.genericDelete(reqTaskId, res, this.userTaskStore);
+      });
+   }
+   this.backendService.deleteTask(reqTaskId);
+  }
+
+  private genericDelete(
+    reqTaskId: string,
+    taskArray:TaskType[],
+    taskStore:BehaviorSubject<TaskType[]> ):boolean {
+
+    let allCurrentTasks: any = taskStore.getValue();
+    let index = taskArray.findIndex( (task) => task.taskid == reqTaskId) 
+    if (index) {
+      taskStore.next(allCurrentTasks.pop(index))
+      this.toastService.success(this.TASK_DELETE_SUCCESS);
+      return true;
+    }
+    return false;
+  }
+
+  updateTask(reqTaskId: string, updatedStatus: string) {
+    this.backendService.updateTask(reqTaskId, updatedStatus);
+
+    let taskFound = false;
+
+    this.allTasks.subscribe(res =>  { 
+    taskFound = this.genericUpdate(reqTaskId, res, updatedStatus, this.allTaskStore)
+      });
+
+    if (!taskFound) {
+      this.userTasks.subscribe(res =>  { 
+        taskFound = this.genericUpdate(reqTaskId, res, updatedStatus, this.userTaskStore)
+      })
+    }
+    this.toastService.error(this.TASK_NOT_FOUND);
+  }
+
+  private genericUpdate(
+    reqTaskId: string,
+    taskArray:TaskType[],
+    updatedStatus: string,
+    taskStore:BehaviorSubject<TaskType[]>):boolean {
+
+    let allCurrentTasks: any = taskStore.getValue();
+    let index = taskArray.findIndex( (task) => task.taskid == reqTaskId) 
+    if (index) {
+
+      let updatedTask:TaskType = allCurrentTasks[index];
+      updatedTask.data.status = updatedStatus;
+      
+      taskStore.next(allCurrentTasks)
+      this.toastService.success(this.TASK_UPDATED);
+      return true;
+    }
+  
+    return false;
   }
 
   getInfoFromFormatedAddress(searchAddress: string) {
-    if (!searchAddress) {
-      return this.toastService.error(this.NO_ADDRESS);
-    }
-
-    let postResponse;
-
-    postResponse = this.http
-      .post(`${environment.backendUri}/places`, { address: searchAddress })
-      .subscribe({
-        next: (val) => {
-          console.log(val);
-          this.searchResult = val;
-        },
-        error: (err) => console.error(err),
-        complete: () => console.info('complete'),
-      });
-
-    return this.searchResult;
+    return this.backendService.getInfoFromFormatedAddress(searchAddress);
   }
 
   async getTaskAddress(newlat: number, newlong: number) {
-    let address;
-    await this.geoCoder.geocode(
-      { location: { lat: newlat, lng: newlong } },
-      (results, status) => {
-        console.log('GEOCOdDE: ');
-        if (results !== null && status === 'OK') {
-          address = results[0];
-        }
-      }
-    );
-    return address;
+    return this.backendService.getTaskAddress(newlat, newlong);
   }
 
   async getCoords(address: string) {
-    let coords: any = {
-      lat: '',
-      lng: '',
-    };
-    await this.geoCoder.geocode(
-      {
-        address: address,
-      },
-      (results, status) => {
-        if (status === 'OK' && results != null) {
-          console.log(results[0].geometry.viewport);
-          coords = {
-            lat: results[0].geometry.location.lat(),
-            lng: results[0].geometry.location.lng(),
-          };
-          console.log(coords);
-        }
-      }
-    );
-
-    return coords;
+    return this.backendService.getCoords(address);
   }
+
 
 }

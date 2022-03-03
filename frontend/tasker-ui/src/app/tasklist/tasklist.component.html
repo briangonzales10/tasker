@@ -1,7 +1,6 @@
-<div class=" tasklist_content_container">
-<div class="" id="cards_outer_container">
-
-    <div *ngFor="let task of publicTasksArray" class="card shadow-sm p-3 bg-body rounded mb-3 mt-3 mx-1" style="max-width: 350px;">
+<div class="tasklist_content_container">
+<div id="cards_outer_container">
+    <div *ngFor="let task of publicTasksArray | async" class="card shadow-sm p-3 bg-body rounded mb-3 mt-3 mx-1" style="max-width: 350px;">
         <div class="row g-0">
           <div class="col-md-4">
             <img src="{{ task.data.picUrl }}" class="img-fluid rounded-start" alt="{{ task.data.taskname }}">
