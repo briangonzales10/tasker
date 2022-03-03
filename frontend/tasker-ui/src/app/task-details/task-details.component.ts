@@ -84,21 +84,17 @@ export class TaskDetailsComponent implements OnInit {
     this.editAllowed();
     const routeParams = this.route.snapshot.paramMap;
     const taskIdFromRoute = routeParams.get('taskId');
+
     if (taskIdFromRoute !== null) {
-      this.tasksService.getSingleTask(taskIdFromRoute)
-      .subscribe({
-        next: (mdata) => {
-          this.singleTask = mdata;
-          console.log('MY DATA: ');
-          console.log(this.singleTask);
-          this.initMap();
-        },
-        error: (err) => {
-          console.warn(err)
-          this.toastService.error(this.TASK_ERROR)
-        }
-      })
+      let response = this.tasksService.getSingleTask(taskIdFromRoute)
+      if (response != undefined) {
+        this.singleTask = response;
+        this.initMap();
+      } else {
+        this.toastService.error(this.TASK_ERROR);
+      }
     }
+
   }
 
   async initMap() {

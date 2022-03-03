@@ -1,6 +1,6 @@
-import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
 
@@ -11,60 +11,18 @@ import { TasksService } from '../shared/services/tasks.service';
 })
 export class TasklistComponent implements OnInit {
 
-  // tasksList = this.taskService.getTasks();
-  publicTasks: any;
-  publicTasksArray: any[] = []
-
+  publicTasksArray: any;
+ 
 
   constructor(
-    private route: ActivatedRoute,
     private taskService: TasksService,
     public authService: AuthService
-    ) { }
+    ) {
+      this.publicTasksArray = this.taskService.allTasks;
+     }
 
-  async ngOnInit(): Promise<void> {
-    const routeParams = this.route.snapshot.routeConfig?.path;
-    console.log('route => ' + routeParams);
-    if (routeParams === '') {
-      this.publicTasks = await this.getPublicTasks();
-    }
-    else if (routeParams === 'my-tasks') {
-      this.publicTasks = await this.getAllUserTasks();
-    }
-
+  ngOnInit() {
   }
 
-  async getPublicTasks() {
-    (await this.taskService.getTasks())
-    .subscribe({
-      next: (results => {
-        console.log(results)
-        results.forEach( (task) => {
-          if (task.data.isPublic == true) {
-            this.publicTasksArray.push(task)
-          }
-        })
-            }),
-      error: ( (err) => {
-        console.log(err)
-      })
-      })
-    }
-  
-  async getAllUserTasks() {
-    (await this.taskService.getUserTasks())
-    .subscribe({
-      next: (results => {
-        console.log(results)
-        results.forEach( (task) => {
-            this.publicTasksArray.push(task)
-          
-        })
-            }),
-      error: ( (err) => {
-        console.log(err)
-      })
-      })
-  }
 }
 

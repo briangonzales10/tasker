@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { TasksService } from 'src/app/shared/services/tasks.service';
 
 @Component({
   selector: 'app-my-tasks',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyTasksComponent implements OnInit {
 
-  constructor() { }
+  myTasksArray: any;
 
-  ngOnInit(): void {
+  constructor(
+    private route: ActivatedRoute,
+    private taskService: TasksService,
+    public authService: AuthService
+    ) { }
+
+  ngOnInit() {
+
+    this.myTasksArray = this.taskService.userTasks;
+
   }
 
 }

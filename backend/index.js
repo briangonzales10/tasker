@@ -29,7 +29,7 @@ app.get("/tasks/:id", async function (req, res) {
   try {
     let tasks = await getService.getTasks(req.params.id);
     res.status(200).send(tasks);
-    console.log("# of Tasks:" + tasks.length);
+    console.log("# of All Tasks:" + tasks.length);
   } catch (err) {
     console.warn(err);
     res.status(400).send(NO_TASKS);
@@ -45,7 +45,7 @@ app.get("/mytasks/:id", async function (req, res) {
     let tasks = await getService.getUserTasks(req.params.id);
     console.log(tasks)
     res.status(200).send(tasks);
-    console.log("# of Tasks:" + tasks.length);
+    console.log("# of User Tasks:" + tasks.length);
   } catch (err) {
     console.warn(err);
     res.status(400).send(NO_TASKS);
