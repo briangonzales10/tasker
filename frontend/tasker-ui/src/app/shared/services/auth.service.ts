@@ -5,23 +5,34 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import { Router } from "@angular/router";
 // import firebase from 'firebase/compat';
 import firebase from 'firebase/compat/app';
-import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
-
+import { ToastService } from 'angular-toastify';
+import { Pass } from '../../shared/services/pass';
+import { Subject } from 'rxjs';
+import { FirebaseApp } from '@angular/fire/app';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  PROFILE_UPD_SUCCESS = 'Profile Updated!';
+  UPDATE_ERROR = 'Oh No, something went wrong!';
+  PASS_UPD_SUCCESS = 'Password Updated!';
+
   loggedInUser: any;
   userMessage: string = '';
   securityToken: any = '';
+  // updateUserProfile = updateProfile;
+  // authUser = getAuth();
+  // updateUserEmail = updateEmail;
+  // updateUserPass = updatePassword
 
   constructor(
     public fs: AngularFirestore,
     public fAuth: AngularFireAuth,
     public router: Router,
-    public ngZone: NgZone
+    public ngZone: NgZone,
+    public toastService: ToastService
   ) {
     this.fAuth.authState.subscribe({
       next: (user) => {
@@ -158,4 +169,81 @@ export class AuthService {
    facebookAuth() {
      return this.authLogin(new firebase.auth.FacebookAuthProvider());
    }
+
+   async updateUserHandler(updateUser: User, authPass: Pass) {
+    if (updateUser.displayName !== '' || updateUser.photoURL !== '') {
+      this.updateUserProfile(updateUser);
+    }
+
+    if (updateUser.email !== '') {
+      await this.fAuth.signInWithEmailAndPassword(this.loggedInUser.email, authPass.currentPass);
+      this.updateUserEmail(updateUser.email);
+    }
+
+    if (authPass.updatedPass !== '') {
+      this.updateUserPass(authPass);
+    }
+  }
+
+  private async updateUserEmail(updEmailAddress: string) {
+    const user = await this.fAuth.currentUser;
+    user!.updateEmail(updEmailAddress);
+  }
+
+  private async updateUserPass(authPass: Pass) {
+    await this.fAuth.currentUser
+    .then(result => { 
+      result?.updatePassword(authPass.updatedPass);
+      this.toastService.success(this.PASS_UPD_SUCCESS); 
+    })
+    .catch( err => {
+      console.log(err);
+      this.toastService.error(this.UPDATE_ERROR);
+    });
+  }
+
+  private async updateUserProfile(updateUser: User) {
+    //updates display name & email
+    const user = await this.fAuth.currentUser;
+
+    const profileUpdateObj = this.buildUpdateUserObj(updateUser.displayName, updateUser.photoURL);
+
+    if (Object.keys(profileUpdateObj).length === 0) {
+      return;
+    }
+
+    user!.updateProfile(profileUpdateObj)
+    .then( (res) => this.toastService.success(this.PROFILE_UPD_SUCCESS))
+    .catch ( (res) => {
+      console.warn(res);
+      this.toastService.error(this.UPDATE_ERROR);
+    });
+   }
+
+   updatePass(oldPass: string, newPass: string) {
+     
+   }
+
+  private buildUpdateUserObj(updDisplayName: string, updPhotoUrl: string): Object {
+    let userUpdates = {};
+    if (updDisplayName != '' && updPhotoUrl != '') {
+      userUpdates = {
+        displayName: updDisplayName,
+        photoURL: updPhotoUrl
+      }
+    }
+
+    if (updDisplayName != '' && updPhotoUrl === '') {
+      userUpdates = {
+        displayName: updDisplayName
+      }
+    }
+
+    if (updDisplayName === '' && updPhotoUrl != '') {
+      userUpdates = {
+        photoURL: updPhotoUrl
+      }
+    }
+    return userUpdates;
+  }
 }

@@ -86,7 +86,7 @@ export class TaskDetailsComponent implements OnInit {
     const taskIdFromRoute = routeParams.get('taskId');
 
     if (taskIdFromRoute !== null) {
-      let response = this.tasksService.getSingleTask(taskIdFromRoute)
+      let response = await this.tasksService.getSingleTask(taskIdFromRoute)
       if (response != undefined) {
         this.singleTask = response;
         this.initMap();

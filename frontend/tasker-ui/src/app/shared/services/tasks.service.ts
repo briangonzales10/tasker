@@ -61,13 +61,13 @@ export class TasksService {
     )
   }
 
-  getSingleTask(reqtaskId: string):TaskType | undefined {
+  getSingleTask(reqtaskId: string):any {
+    let reqTask: any = this.TASK_NOT_FOUND;
     this.allTasks.subscribe(res => res.forEach(
       task => {
         if (reqtaskId == task.taskid) {
-          return task;
-        } else {
-          return;
+          console.log(`Task Found in All Tasks: ${task}`)
+          reqTask = task;
         }
       }
     ));
@@ -75,13 +75,12 @@ export class TasksService {
     this.userTasks.subscribe(res => res.forEach(
       task => {
         if (reqtaskId == task.taskid) {
-          return task;
-        } else {
-          return;
+          console.log(`Task Found in UserTasks: ${task}`)
+          reqTask = task;
         }
       }
     ));
-    return undefined;
+    return reqTask
   }
 
   async submitTaskToDB(userTask: SubmitTask): Promise<Observable<string>> {

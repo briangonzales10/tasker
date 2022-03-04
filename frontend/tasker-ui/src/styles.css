@@ -55,6 +55,14 @@ a:hover {
   width: 50%;
 }
 
+.btn {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.input {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 @media screen and (max-width: 600px) {
   .inner_form_container {
     width: 90vw;

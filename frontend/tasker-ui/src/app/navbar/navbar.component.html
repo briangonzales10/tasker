@@ -17,8 +17,15 @@
             <a class="nav-link active" routerLink="/my-tasks">My Tasks</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Account
+            <a 
+            class="nav-link active dropdown-toggle" 
+            href="#" 
+            id="navbarDropdownMenuLink" 
+            role="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false">
+              <span *ngIf="!userDisplayName">Account</span>
+              <span *ngIf="userDisplayName">{{ userDisplayName }}</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li><a *ngIf="isAuthenticated==false" class="dropdown-item" [routerLink]="['/sign-in']">Login</a></li>
