@@ -91,6 +91,7 @@ export class TaskDetailsComponent implements OnInit {
         this.singleTask = response;
         this.initMap();
       } else {
+        console.log(response)
         this.toastService.error(this.TASK_ERROR);
       }
     }
@@ -157,6 +158,7 @@ export class TaskDetailsComponent implements OnInit {
       this.authService.loggedInUser.uid === environment.adminUid
     ) {
       this.isAdmin = true;
+      console.log("Admin Logged in")
     }
   }
 

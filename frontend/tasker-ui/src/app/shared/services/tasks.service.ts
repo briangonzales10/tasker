@@ -20,6 +20,7 @@ export class TasksService {
   TASK_DELETE_SUCCESS = 'Task Deleted Successfully!';
 
   taskList = [];
+  singleTask: TaskType | undefined;
   searchResult = {};
   geoCoder = new google.maps.Geocoder();
   userTaskCount: number = 0;
@@ -64,10 +65,9 @@ export class TasksService {
   getSingleTask(reqtaskId: string):TaskType | undefined {
     this.allTasks.subscribe(res => res.forEach(
       task => {
-        if (reqtaskId == task.taskid) {
-          return task;
-        } else {
-          return;
+        if (reqtaskId === task.taskid) {
+          console.log(task)
+          this.singleTask = task;
         }
       }
     ));
@@ -75,13 +75,11 @@ export class TasksService {
     this.userTasks.subscribe(res => res.forEach(
       task => {
         if (reqtaskId == task.taskid) {
-          return task;
-        } else {
-          return;
+          this.singleTask = task;
         }
       }
     ));
-    return undefined;
+    return this.singleTask;
   }
 
   async submitTaskToDB(userTask: SubmitTask): Promise<Observable<string>> {
