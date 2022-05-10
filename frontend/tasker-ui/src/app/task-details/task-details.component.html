@@ -17,7 +17,7 @@
           data-bs-toggle="modal"
           data-bs-target="#statusModal"
         >
-          Change Status
+          Edit
         </button>
       </div>
     </div>
@@ -62,7 +62,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editModalLabel">
-          Delete Task Confirmation
+          Update Status
         </h5>
         <button
           type="button"
@@ -72,8 +72,11 @@
         ></button>
       </div>
       <div class="modal-body">
+        <p>Upload Completion Proof</p>
+        <app-file-upload
+        [taskId]="singleTask.taskid"></app-file-upload>
         <p>Select Updated Status</p>
-
+        
         <button
           type="button"
           class="btn btn-info mx-1"

@@ -24,6 +24,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { SubmitTaskComponent } from './submit-task/submit-task.component';
 import { MyTasksComponent } from './components/my-tasks/my-tasks.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { MyTasksComponent } from './components/my-tasks/my-tasks.component';
     VerifyEmailComponent,
     UserSettingsComponent,
     SubmitTaskComponent,
-    MyTasksComponent
+    MyTasksComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,

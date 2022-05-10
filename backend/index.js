@@ -2,8 +2,10 @@ require("dotenv").config();
 
 const express = require("express");
 var cors = require("cors");
-const axios = require("axios");
+// const axios = require("axios");
 const collection = require("./scripts/firestoreHelper");
+const fileUpload = require("express-fileupload");
+const path = require('path')
 
 let helper = require("./scripts/helper.js");
 let googlePlace = require("./scripts/googlePlace.js");
@@ -21,8 +23,13 @@ app.use(
   })
 );
 app.use(cors());
+app.use(fileUpload({
+  safeFileNames: true,
+  createParentPath: true
+}))
 
-//get (get all route)
+
+// Get (get all route)
 app.get("/tasks/:id", async function (req, res) {
   console.log(req.headers)
   console.log(req.params.id)
@@ -36,7 +43,7 @@ app.get("/tasks/:id", async function (req, res) {
   }
 });
 
-//get all tasks for 1 user
+// Get all tasks for 1 user
 app.get("/mytasks/:id", async function (req, res) {
   console.log(req.headers)
   console.log(req)
@@ -52,7 +59,7 @@ app.get("/mytasks/:id", async function (req, res) {
   }
 });
 
-//task (get single)
+// Task (get single)
 app.get("/task/:taskId", async function (req, res) {
   let task;
   console.log(req)
@@ -66,7 +73,7 @@ app.get("/task/:taskId", async function (req, res) {
   }
 });
 
-//add (post)
+// Add (post)
 app.post("/add", async function (req, res) {
   const data = req.body;
 
@@ -93,7 +100,7 @@ app.post("/add", async function (req, res) {
   }
 });
 
-//delete{id} delete route
+// Delete{id} delete route
 app.delete("/delete/:taskId", async function (req, res) {
   const taskIdToDelete = req.params.taskId;
 
@@ -102,7 +109,7 @@ app.delete("/delete/:taskId", async function (req, res) {
   res.status(200).send("Task Deleted");
 });
 
-//Update Path /update to change status to complete
+// Update Path /update to change status to complete
 app.put("/update/:taskId", async function (req, res) {
   const taskIdToUpdate = req.params.taskId;
   const snapshot = await collection.tasklist.doc(taskIdToUpdate).get();
@@ -134,3 +141,26 @@ app.post("/places", async function (req, res) {
     res.status(200).send(results);
   }
 });
+
+// File Uploading
+app.post("/upload/:taskId", function (req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  if (!req.params.taskId){
+    return res.status(400).send('no task id provided!')
+  }
+
+  let fileProof = req.files.proof
+  let fileProofName = fileProof.name
+  let fileExtension = fileProofName.split('.').pop()
+  let fileChangedName = `${req.params.taskId}${fileExtension}`
+
+  fileProof.mv(path.join(__dirname, 'uploads', 'proof', fileChangedName), function(err) {
+    if (err)
+    return res.status(500).send(err)
+  })
+  console.log(`File Uploaded for task ${req.params.taskId}: ${fileProof.name}`)
+
+  res.status(200).send("File uploaded successfully")
+})

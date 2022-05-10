@@ -29,6 +29,9 @@ export class BackendService {
     public toastService: ToastService
   ) { }
 
+uploadFile(taskId:string, formData: FormData) {
+  return this.http.post(`${environment.backendUri}/upload/${taskId}`, formData)
+}
 
 getTasks() {
   // let userToken = await this.authService.getToken();
