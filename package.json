@@ -3,11 +3,11 @@
     "version": "0.0.0",
     "scripts": {
       "start": "node server",
-      "heroku-postbuild": "cd ./backend && node start && cd ../frontent/tasker-ui/ && npm i && npm run build"
+      "heroku-postbuild": "cd ./backend && npm i &&  node start && cd ../frontent/tasker-ui/ && npm i && npm run build"
     },
     "private": true,
     "engines": {
-      "node": "14.7.5",
+      "node": "14.17.5",
       "npm": "8.5.0"
     }
   }
