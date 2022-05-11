@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "cd ../frontent/tasker-ui/ && npm i && npm run build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Brian Gonzales",
   "license": "ISC",
