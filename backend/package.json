@@ -4,7 +4,9 @@
   "description": "task brian with things",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "cd ../frontent/tasker-ui/ && npm i && npm run build"
   },
   "author": "Brian Gonzales",
   "license": "ISC",
