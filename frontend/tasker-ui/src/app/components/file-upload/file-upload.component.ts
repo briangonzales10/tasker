@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastService } from 'angular-toastify';
 import { Toast } from 'angular-toastify/lib/toast';
 import { BackendService } from 'src/app/shared/services/backend.service';
@@ -11,18 +12,25 @@ import { BackendService } from 'src/app/shared/services/backend.service';
 })
 export class FileUploadComponent implements OnInit {
 
+  @ViewChild('fileUpload') fileUpload!: ElementRef;
   FILE_UPLOAD_ERROR = 'File upload error, something went wrong!'
 
   @Input()
   taskId: string = ''
 
   fileName = '';
-  fileUploadURL = '';
+  public proofForm: FormGroup;
 
   constructor(
-    private http: HttpClient,
     private backend: BackendService,
-    public toastService: ToastService) { }
+    private fb: FormBuilder,
+    public toastService: ToastService,) {
+
+      this.proofForm = this.fb.group({
+        proof: [''],
+        fileUpload: ['']
+      })
+     }
 
   ngOnInit(): void {
     if (this.taskId === '') {
@@ -39,7 +47,7 @@ export class FileUploadComponent implements OnInit {
     }
 
     const fileData = new FormData();
-    fileData.append(`proof`, file)
+    fileData.append('proof', file)
 
     let response = this.backend.uploadFile(this.taskId, fileData)
     response.subscribe({
@@ -52,6 +60,15 @@ export class FileUploadComponent implements OnInit {
         console.error(error)
       }
     })
+    this.resetForm()
+    // response.subscribe( res => this.toastService.info(res.toString()))
   }
-  
+
+  resetForm() {
+    console.log(`fileUpload ${this.fileUpload.nativeElement.value}`)
+    console.log(`Proof: ${this.proofForm.get('proof')?.value}`)
+    console.log(`Proof: ${this.proofForm.get('fileUpload')?.value}`)
+    this.proofForm.reset()
+  }
+
 }
