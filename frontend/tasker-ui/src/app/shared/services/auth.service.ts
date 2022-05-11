@@ -5,6 +5,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat
 import { Router } from "@angular/router";
 // import firebase from 'firebase/compat';
 import firebase from 'firebase/compat/app';
+import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 
 
 @Injectable({
@@ -14,6 +15,7 @@ export class AuthService {
 
   loggedInUser: any;
   userMessage: string = '';
+  securityToken: any = '';
 
   constructor(
     public fs: AngularFirestore,
@@ -28,8 +30,6 @@ export class AuthService {
         this.loggedInUser = user;
         localStorage.setItem('user', JSON.stringify(this.loggedInUser))
         JSON.parse(localStorage.getItem('user') || '{}');
-        console.log("setting local storage: ")
-        // console.log(JSON.parse(localStorage.getItem('user') || '{}'))
       } else {
         localStorage.setItem('user', "") //can't set to null so setting to blank
         JSON.parse(localStorage.getItem('user') || '{}');
@@ -57,7 +57,6 @@ export class AuthService {
    }
 
    get isLoggedIn(): boolean {
-    console.log("+1")
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.email) {
       return true;
@@ -142,6 +141,14 @@ export class AuthService {
         console.log("removed user")
         this.router.navigate(['/'])
       })
+   }
+
+   async getToken() {
+    let token = this.fAuth.idTokenResult
+    .subscribe({
+      next:  (token) => this.securityToken = token
+    })
+    return this.securityToken;
    }
 
    googleAuth() {

@@ -1,1 +1,67 @@
-<p>user-settings works!</p>
+<div class="form_container_large">
+    <div class="shadow p-3 w-75 mb-5 bg-body rounded ">
+        <h2 *ngIf="user.displayname != null"><strong></strong> {{ user.displayName }}</h2>
+        <h3 *ngIf="user.displayname == null"><strong></strong> Hello!</h3>
+        <p><strong>Email Address:</strong> {{ user.email }}</p>
+        <p><strong>Photo:</strong> {{ user.photoUrl }}</p>
+        <p><strong># of Tasks Submitted:</strong> {{ userTasks.length }} </p>
+        <button
+        class="btn btn-info"
+        data-bs-toggle="modal"
+        data-bs-target="#updateUserModal"
+      >Update</button>
+    </div>
+</div>
+
+<div
+  class="modal fade"
+  id="updateUserModal"
+  tabindex="-1"
+  aria-labelledby="Update User Details"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateUserModalLabel">
+          Update User Details
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userForm" (ngSubmit)="updateUser()">
+            <div class="mb-3">
+                <label for="displayname" class="form-label">Display Name<span class="formbuilder-required">*</span></label>
+                
+                <input type="text" placeholder="User Display Name" class="form-control" formControlName="displayname" name="displayname" >
+            </div>
+ 
+
+            <div class="mb-3">
+                <label for="emailaddress" class="form-check-label">New Email<span class="formbuilder-required">*</span></label>
+                <input type="text" placeholder="Updated Email Address" class="form-control" formControlName="emailaddress" name="emailaddress" >
+
+            
+            </div>
+            <div class="mb-3">
+                <div class="formbuilder-button">
+                <button type="submit" class="btn-info btn" [disabled]="!userForm.valid" name="submitButton" access="false"  id="submitButton">Update</button> 
+            </div>
+        
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>

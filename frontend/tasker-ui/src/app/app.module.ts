@@ -9,6 +9,7 @@ import { AuthGuard } from './shared/guard/auth.guard'
 import { environment } from '../environments/environment';
 import { AuthService } from './shared/services/auth.service'
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastService, AngularToastifyModule } from 'angular-toastify';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
 import { SubmitTaskComponent } from './submit-task/submit-task.component';
+import { MyTasksComponent } from './components/my-tasks/my-tasks.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,9 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
     ForgotPasswordComponent,
     VerifyEmailComponent,
     UserSettingsComponent,
-    SubmitTaskComponent
+    SubmitTaskComponent,
+    MyTasksComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +49,7 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    AngularToastifyModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: TasklistComponent },
@@ -52,11 +58,12 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
       { path: 'register', component: RegisterComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'verify-email-address', component: VerifyEmailComponent },
+      { path: 'my-tasks', component: MyTasksComponent, canActivate: [AuthGuard] },
       { path: 'user-settings', component: UserSettingsComponent, canActivate: [AuthGuard] },
       { path: 'submit', component: SubmitTaskComponent, canActivate: [AuthGuard] }
     ])
   ],
-  providers: [AuthService],
+  providers: [AuthService, ToastService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

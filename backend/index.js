@@ -1,25 +1,19 @@
 require("dotenv").config();
+
 const express = require("express");
-var cors = require('cors')
-const axios = require('axios')
+var cors = require("cors");
+// const axios = require("axios");
+const collection = require("./scripts/firestoreHelper");
+const fileUpload = require("express-fileupload");
+const path = require('path')
+const fs = require('fs')
 
-const fs = require("firebase-admin");
-// let taskStatus = require("./scripts/status");
-// import { Status } from "./scripts/status.js";
 let helper = require("./scripts/helper.js");
-let googlePlace = require("./scripts/googlePlace.js")
-const serviceAccount = require("./resources/taskerdb-11614-firebase-adminsdk-81hw6-ada33abc69.json");
+let googlePlace = require("./scripts/googlePlace.js");
+let getService = require("./service/getService");
 
-const {
-  initializeApp,
-  applicationDefault,
-  cert,
-} = require("firebase-admin/app");
-const {
-  getFirestore,
-  Timestamp,
-  FieldValue,
-} = require("firebase-admin/firestore");
+const NO_TASKS = "No Tasks Available!";
+const uploadsPath = path.join(__dirname, 'uploads', 'proof')
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -30,123 +24,103 @@ app.use(
     extended: true,
   })
 );
-app.use(cors())
+app.use(cors());
+app.use(fileUpload({
+  safeFileNames: true,
+  createParentPath: true,
+  preserveExtension: true
+}))
 
 
-//Open DB connection
-fs.initializeApp({
-  credential: fs.credential.cert(serviceAccount),
-});
-const db = fs.firestore();
-const tasklistCollection = db.collection("tasklist");
-const usersCollection = db.collection('users')
-
-//get (get all route)
-app.get("/tasks", async function (req, res) {
-  let tasks = [];
-  const snapshot = tasklistCollection.orderBy("timestamp").get();
-  (await snapshot).forEach((doc) => {
-    console.log(doc.id, "=>", doc.data());
-    tasks.push({ taskid: doc.id, data: doc.data() });
-  });
-  console.log(`# of Tasks found: ${tasks.length}`);
-  res.send(tasks);
-});
-
-//task (get single)
-app.get("/task/:taskId", async function (req, res) {
-  let tasks = [];
+// Get (get all route)
+app.get("/tasks/:id", async function (req, res) {
+  console.log(req.headers)
+  console.log(req.params.id)
   try {
-    const singleTask = await tasklistCollection.doc(req.params.taskId).get();
-
-    tasks.push({ taskid: singleTask.id, data: singleTask.data() });
-
+    let tasks = await getService.getTasks(req.params.id);
     res.status(200).send(tasks);
+    console.log("# of All Tasks:" + tasks.length);
+  } catch (err) {
+    console.warn(err);
+    res.status(400).send(NO_TASKS);
+  }
+});
+
+// Get all tasks for 1 user
+app.get("/mytasks/:id", async function (req, res) {
+  console.log(req.headers)
+  console.log(req)
+  console.log(req.params.id)
+  try {
+    let tasks = await getService.getUserTasks(req.params.id);
+    console.log(tasks)
+    res.status(200).send(tasks);
+    console.log("# of User Tasks:" + tasks.length);
+  } catch (err) {
+    console.warn(err);
+    res.status(400).send(NO_TASKS);
+  }
+});
+
+// Task (get single)
+app.get("/task/:taskId", async function (req, res) {
+  let task;
+  console.log(req)
+  try {
+    task = await getService.getSingleTask(req.params.taskId);
+
+    res.status(200).send(task);
   } catch (err) {
     console.log(err);
     res.status(404).send(`Task not found for task ID: ${req.params.taskId}`);
   }
 });
 
-//add (post)
+// Add (post)
 app.post("/add", async function (req, res) {
   const data = req.body;
 
-  console.log(data)
-  console.log(req.body)
+  console.log(data);
+  console.log(req.body);
 
-  if (!data || !data.uid || !data.taskname || !data.location || data.isPublic == null) {
-    res.status(400).send('data not valid')
+  if (
+    !data ||
+    !data.uid ||
+    !data.taskname ||
+    !data.location ||
+    data.isPublic == null
+  ) {
+    res.status(400).send("data not valid");
     return;
   }
-
-  let booleanIsPublic = helper.getBoolean(data.isPublic)
-
-  let time = Timestamp.now();
-
-  let taskObject = {
-    timestamp: time, //backend derived
-    taskname: data.taskname, //front end
-    location: { //frontend
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
-      address: data.location.address
-    },
-    status: `OPEN`, //backend for new tasks of course
-    picUrl: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',//data.picUrl, //needs to be backend from pic URL service
-    remarks: data.remarks, //frontend
-    isPublic: booleanIsPublic, //frontend
-    isComplete: false,
-    submittedBy: data.uid //front end uuid of user & required update user Tasks
-  };
-  console.log(taskObject);
   try {
-    let myTaskId;
-    let taskIdNew = await tasklistCollection.add(taskObject)
-      .then( (results) => {
-        console.log(results)
-        myTaskId = results.id
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    
-    usersCollection.doc(data.uid).update({
-      submittedTasks: FieldValue.arrayUnion(myTaskId) })
-      .then ((res) => {
-        console.log(res)
-      })
-      .catch( (err) => {
-        console.log(err)
-      })
-      
-    
+    await getService.submitTask(data)
+
     res.status(200).send(`Thank You! Your task: "${data.taskname}" has been added!`);
   } catch (error) {
-    console.warn(error)
-    res.status(400).send('task could not bet added because: ' + error)
+    console.warn(error);
+    res.status(400).send("task could not bet added");
   }
-
-
 });
 
-//delete{id} delete route
+// Delete{id} delete route
 app.delete("/delete/:taskId", async function (req, res) {
   const taskIdToDelete = req.params.taskId;
-  console.log(taskIdToDelete);
-  await tasklistCollection.doc(taskIdToDelete).delete();
+
+  console.log("DELETING TASK: " + taskIdToDelete);
+  await collection.tasklist.doc(taskIdToDelete).delete();
   res.status(200).send("Task Deleted");
 });
 
-//Update Path /update to change status to complete
+// Update Path /update to change status to complete
 app.put("/update/:taskId", async function (req, res) {
   const taskIdToUpdate = req.params.taskId;
-  const snapshot = await tasklistCollection.doc(taskIdToUpdate).get();
+  const snapshot = await collection.tasklist.doc(taskIdToUpdate).get();
   let reqStatusChange = req.body.status;
 
   let updateStatus = helper.findStatus(reqStatusChange);
   if (updateStatus !== "NONE") {
-    await tasklistCollection
+    await collection.tasklist
       .doc(taskIdToUpdate)
       .update({ status: updateStatus });
 
@@ -159,17 +133,73 @@ app.put("/update/:taskId", async function (req, res) {
 });
 
 app.post("/places", async function (req, res) {
-  const data = req.body
-  console.log(req)
-  console.log(`Searching for: ${data.address}`)
+  const data = req.body;
+  console.log(req);
+  console.log(`Searching for: ${data.address}`);
   if (!data) {
-    res.status(400).send("Must include address to search")
+    res.status(400).send("Must include address to search");
   } else {
-    let results = await googlePlace.findFromAddress(data.address)
-    console.log(results)
-    res.status(200).send(results)
+    let results = await googlePlace.findFromAddress(data.address);
+    console.log(results);
+    res.status(200).send(results);
+  }
+});
+
+// File Uploading
+app.post("/upload/:taskId", function (req, res) {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  if (!req.params.taskId){
+    return res.status(400).send('no task id provided!')
   }
 
+  let fileProof = req.files.proof
+  let fileProofName = fileProof.name
+  let fileExtension = fileProofName.split('.').pop()
+  let fileChangedName = `${req.params.taskId}.${fileExtension}`
+  console.log(`
+  fileProof: ${fileProof}
+  fileProofName: ${fileProofName}
+  fileExtension: ${fileExtension}
+  fileChangedName: ${fileChangedName}
+  `)
 
+  fileProof.mv(path.join(uploadsPath, fileChangedName), function(err) {
+    if (err)
+    return res.status(500).send(err)
+  })
+  console.log(`File Uploaded for task ${req.params.taskId}: ${fileProof.name}`)
 
+  res.status(200).send("File uploaded successfully")
+})
+
+// Get proof of task completion
+app.get("/proof/:taskId",async function (req, res) {
+  console.log('Searching for proof')
+  let taskId = req.params.taskId
+  if (!taskId) {
+    console.log('Searching for proof with no task Id')
+    return res.status(400).send({'status': 'fail', 'message': 'no task Id Provided'})
+  }
+
+  let searchFiles = fs.readdirSync(uploadsPath)
+  console.log(searchFiles)
+
+  searchFiles.find(filename => {
+    if (filename.includes(taskId)) {
+      console.log('starting array search')
+      fullFilePath = path.join(uploadsPath, filename)
+      console.log(`FilePath Requested: ${fullFilePath}`)
+      res.status(200).sendFile(fullFilePath, (err) => {
+        if (err) {
+          console.log(err)
+        }
+      })
+    }
+    else {
+      console.log('no proof found')
+      res.status(400).send({'status': 'fail', 'message': 'an error occured finding file'})
+    }
+  })
 })

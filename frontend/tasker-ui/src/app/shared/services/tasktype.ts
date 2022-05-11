@@ -21,6 +21,7 @@ export interface  TaskDataTime {
 }
 
 export interface TaskDataLocation {
+    address: any;
     latitude: number;
     longitude: number;
 }

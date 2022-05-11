@@ -1,8 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
+import { GoogleMap } from '@angular/google-maps';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BackendService } from '../shared/services/backend.service';
 import { SubmitDataLocation, SubmitTask } from '../shared/services/submit-task';
+import { ToastService } from 'angular-toastify';
+import { TasksService } from '../shared/services/tasks.service';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-submit-task',
@@ -31,17 +33,15 @@ export class SubmitTaskComponent implements OnInit {
   zoom = 12;
 
   //Form Stuff
-public taskForm: FormGroup;
+  public taskForm: FormGroup;
 
-// taskname: string = '';
-// location: any;
-// remarks: string = '';
-// isPublic: boolean = true;
-uid: string = ''; //Will need to move this to a separate dataservice...
+  uid: string = ''; //Will need to move this to a separate dataservice...
 
   constructor(
     private fb: FormBuilder,
-    private backendService: BackendService
+    private toastService: ToastService,
+    private tasksService: TasksService,
+    private authService: AuthService
   ) {
       this.taskForm = this.fb.group({
         taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
@@ -86,16 +86,29 @@ uid: string = ''; //Will need to move this to a separate dataservice...
     })
   }
 
-  submitTask() {
-  
+  async submitTask() {
+
+    const userToken = await this.authService.getToken();
+
+    let coords: any = {
+      lat: '',
+      lng: ''
+    }
+
+    try {
+        coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
+    } catch (err) {
+      console.warn("could not get coords")
+    }
+
     let userTaskname = this.taskForm.get('taskname')!.value;
     let userAddress = this.searchField.nativeElement.value;
     let userRemarks = this.taskForm.get('remarks')!.value;
     let userIsPublic = this.taskForm.get('isPublic')?.value!;
     let userLocation: SubmitDataLocation = {
       address: userAddress,
-      latitude: 0, //will update lat + long later
-      longitude: 0
+      latitude: coords.lat, //will update lat + long later
+      longitude: coords.lng
     }
 
     console.log("TaskName " + userTaskname)
@@ -104,36 +117,39 @@ uid: string = ''; //Will need to move this to a separate dataservice...
 
     if (userTaskname !== null && userRemarks !== null) {
       
+
       const postTask: SubmitTask = {
           taskname: userTaskname,
           remarks: userRemarks,
           location: userLocation,
           isPublic: userIsPublic,
-          uid: this.uid
+          uid: this.uid,
+          tokenId: userToken
       }
       
-      this.backendService.submitTaskToDB(postTask)
-      .subscribe({
-        next: (res) => {
-          window.alert(res)
-          console.log(res)
-        },
-        error: (err) => {
-          window.alert(this.TASK_ADD_ERROR)
-          console.warn(err);
-        
-        }
-      });  
-
+  let response = await this.tasksService.submitTaskToDB(postTask);
+      response.subscribe( res => this.toastButton('info', res))
   }
   this.resetForm();
 }
 
   resetForm() {
-    console.log(this.taskForm.value)
     this.taskForm.reset()
-    console.log("reset")
-    console.log(this.taskForm.value)
+  }
+
+  toastButton(type: string, msg: string) {
+
+    switch (type) {
+      case 'info': this.toastService.info(msg);
+        break;
+      case 'warn': this.toastService.warn(msg);
+        break;
+      case 'success': this.toastService.success(msg);
+        break;
+      case 'error': this.toastService.error(msg);
+        break;
+      default: this.toastService.info(msg)
+    }
   }
 
 }

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
 
@@ -9,34 +11,18 @@ import { TasksService } from '../shared/services/tasks.service';
 })
 export class TasklistComponent implements OnInit {
 
-  tasksList = this.taskService.getTasks();
-  publicTasks = this.getPublicTasks()
-  publicTasksArray: any[] = []
-
+  publicTasksArray: any;
+ 
 
   constructor(
     private taskService: TasksService,
-    private authService: AuthService) { }
+    public authService: AuthService
+    ) {
+      this.publicTasksArray = this.taskService.allTasks;
+     }
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
 
-  getPublicTasks() {
-    this.taskService.getTasks()
-    .subscribe({
-      next: (results => {
-        console.log(results)
-        results.forEach( (task) => {
-          if (task.data.isPublic == true) {
-            this.publicTasksArray.push(task)
-          }
-        })
-            }),
-      error: ( (err) => {
-        console.log(err)
-      })
-      })
-    }
-  
 }
 
