@@ -5,7 +5,7 @@ import { SubmitTask } from './submit-task';
 import { TaskType } from './tasktype';
 import { environment } from 'src/environments/environment';
 import { ToastService } from 'angular-toastify';
-import { List } from 'immutable';
+
 
 import { AuthService } from './auth.service';
 
@@ -29,6 +29,13 @@ export class BackendService {
     public toastService: ToastService
   ) { }
 
+uploadFile(taskId:string, formData: FormData) {
+  return this.http.post(`${environment.backendUri}/upload/${taskId}`, formData, {responseType: 'text'})
+}
+
+getProof(taskId: string) {
+  return this.http.get(`${environment.backendUri}/proof/${taskId}`, {responseType: "blob"})
+}
 
 getTasks() {
   // let userToken = await this.authService.getToken();

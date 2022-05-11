@@ -135,7 +135,7 @@ export class TasksService {
         taskFound = this.genericUpdate(reqTaskId, res, updatedStatus, this.userTaskStore)
       })
     }
-    this.toastService.error(this.TASK_NOT_FOUND);
+    //this.toastService.error(this.TASK_NOT_FOUND);
   }
 
   private genericUpdate(
@@ -152,7 +152,7 @@ export class TasksService {
       updatedTask.data.status = updatedStatus;
       
       taskStore.next(allCurrentTasks)
-      this.toastService.success(this.TASK_UPDATED);
+      //this.toastService.success(this.TASK_UPDATED);
       return true;
     }
   
@@ -169,6 +169,10 @@ export class TasksService {
 
   async getCoords(address: string) {
     return this.backendService.getCoords(address);
+  }
+
+  async getProof(taskId: string) {
+    return this.backendService.getProof(taskId)
   }
 
 

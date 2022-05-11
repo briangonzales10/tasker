@@ -33,6 +33,7 @@ export class TaskDetailsComponent implements OnInit {
   //Task Data
   singleTask!: TaskType;
   mytask = {};
+  mytaskProofImage: any;
   coords: any;
 
   //Google Maps stuff.
@@ -140,6 +141,38 @@ export class TaskDetailsComponent implements OnInit {
       this.infoContent = this.address.formatted_address;
     } catch (err) {
       console.log(err);
+    }
+
+    this.pictureProof(this.singleTask.taskid)
+  }
+
+  pictureProof(taskId: string) {
+
+    console.log(`Task ID: ${this.singleTask.taskid}`)
+    let response = this.tasksService.getProof(taskId)
+    response.then(
+      (firstResponse) => {
+        console.log(firstResponse)
+        firstResponse.subscribe({
+          next: (res) => {
+            console.log('Subscribe Response')
+            // let proofResponse = JSON.parse(JSON.stringify(res))
+            // console.log(proofResponse)
+            this.createImage(res)
+            }
+        })
+      })
+  }
+
+
+  createImage(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.mytaskProofImage = reader.result;
+    }, false);
+
+    if (image) {
+      reader.readAsDataURL(image)
     }
   }
 

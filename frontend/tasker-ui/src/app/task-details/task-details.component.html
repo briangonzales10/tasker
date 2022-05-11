@@ -10,15 +10,22 @@
           data-bs-toggle="modal"
           data-bs-target="#deleteModal"
         >
-          Delete Task
+          Delete
         </button>
         <button
           class="btn btn-secondary mx-1"
           data-bs-toggle="modal"
           data-bs-target="#statusModal"
         >
-          Change Status
+          Edit
         </button>
+        <button
+        class="btn btn-secondary mx-1"
+        data-bs-toggle="modal"
+        data-bs-target="#uploadProofModal"
+      >
+        Proof
+      </button>
       </div>
     </div>
     <div class="details_body">
@@ -37,7 +44,10 @@
         </google-map>
       </div>
       <p class="card-text">Status: {{ singleTask.data.status }}</p>
-
+      <div class="card-text" *ngIf="singleTask.data.status === 'COMPLETE'">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
+      </div>
+      
       <p class="card-text">{{ singleTask.data.remarks }}</p>
       <p class="card-text">
         <small class="text-muted"
@@ -50,7 +60,7 @@
     </div>
   </div>
 </div>
-
+<!-- Status Modal -->
 <div
   class="modal fade"
   id="statusModal"
@@ -62,7 +72,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editModalLabel">
-          Delete Task Confirmation
+          Update Status
         </h5>
         <button
           type="button"
@@ -72,8 +82,9 @@
         ></button>
       </div>
       <div class="modal-body">
-        <p>Select Updated Status</p>
 
+        <p>Select Updated Status</p>
+        
         <button
           type="button"
           class="btn btn-info mx-1"
@@ -116,7 +127,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Delete Modal -->
 <div
   class="modal fade"
   id="deleteModal"
@@ -153,6 +164,48 @@
           Delete
         </button>
       </div>
+    </div>
+  </div>
+</div>
+<!-- upload proof modal -->
+<div
+  class="modal fade"
+  id="uploadProofModal"
+  tabindex="-1"
+  aria-labelledby="Upload Proof"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadProofModalLabel">
+          Update Status
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Upload Completion Proof</p>
+        <app-file-upload
+        [taskId]="singleTask.taskid"></app-file-upload>
+      </div>
+      <div class="modal-footer mx-1">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Proof Modal-->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="proofModal" aria-hidden="true" id="proofModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <img class="img-fluid" [src]="mytaskProofImage" alt="proof of Completion" />
     </div>
   </div>
 </div>
