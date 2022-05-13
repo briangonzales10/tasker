@@ -14,19 +14,19 @@ const targetPath = isProduction
 const environmentFileContent = `
 export const environment = {
     production: ${isProduction},
-    googleApiKey: "${process.env.GOOGLEAPIKEY}",
-    port: "${process.env.PORT}",
+    googleApiKey: "${process.env["GOOGLEAPIKEY"]}",
+    port: "${process.env["PORT"]}",
     backendUri: "https://sendtaskbackend.herokuapp.com/",
     firebase: {
-      apiKey: "${process.env.GOOGLEAPIKEY}",
-      authDomain: "${process.env.AUTH_DOMAIN}",
-      projectId: "${process.env.PROJECT_ID}",
-      storageBucket: "${process.env.STORAGE_BUCKET}",
-      messagingSenderId: "${process.env.MESSAGING_SENDER_ID}",
-      appId: "${process.env.APP_ID}",
-      measurementId: "${process.env.MEASUREMENT_ID}"
+      apiKey: "${process.env["GOOGLEAPIKEY"]}",
+      authDomain: "${process.env["AUTH_DOMAIN"]}",
+      projectId: "${process.env["PROJECT_ID"]}",
+      storageBucket: "${process.env["STORAGE_BUCKET"]}",
+      messagingSenderId: "${process.env["MESSAGING_SENDER_ID"]}",
+      appId: "${process.env["APP_ID"]}",
+      measurementId: "${process.env["MEASUREMENT_ID"]}"
     },
-    adminUid: '${process.env.ADMIN_UID}'
+    adminUid: '${process.env["ADMIN_UID"]}'
   };
   
 `;
