@@ -1,0 +1,17 @@
+export const environment = {
+    production: true,
+    googleApiKey: '',
+    port: 'env.process.PORT',
+    backendUri: '<%= PREFIX_BACKEND_URL %>',
+    firebase: {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+      measurementId: ""
+    },
+    adminUid: ''
+  };
+  
