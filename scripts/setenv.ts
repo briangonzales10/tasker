@@ -16,7 +16,7 @@ export const environment = {
     production: ${isProduction},
     googleApiKey: "${process.env["GOOGLEAPIKEY"]}",
     port: "${process.env["PORT"]}",
-    backendUri: "https://sendtaskbackend.herokuapp.com/",
+    backendUri: "https://sendtaskbackend.herokuapp.com",
     firebase: {
       apiKey: "${process.env["GOOGLEAPIKEY"]}",
       authDomain: "${process.env["AUTH_DOMAIN"]}",
