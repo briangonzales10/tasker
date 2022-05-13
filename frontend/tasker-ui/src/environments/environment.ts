@@ -1,8 +1,8 @@
 export const environment = {
-    production: true,
+    production: false,
     googleApiKey: '',
-    port: 'proces.env.PORT',
-    backendUri: '',
+    port: '',
+    backendUri: 'http://localhost:3000',
     firebase: {
       apiKey: "",
       authDomain: "",
