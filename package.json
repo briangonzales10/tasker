@@ -4,7 +4,7 @@
     "scripts": {
       "start": "node server",
       "build": "cd ./backend && npm i &&  node start ",
-      "heroku-postbuild": "cd ./frontend/tasker-ui && npm i && npm run build"
+      "heroku-postbuild": "cd ./frontend/tasker-ui && npm i && npm run prebuild && npm run build"
     },
     "private": true,
     "engines": {
