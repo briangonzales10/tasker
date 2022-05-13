@@ -1,0 +1,62 @@
+/* You can add global styles to this file, and also import other style files */
+/* Application-wide Styles */
+h1 {
+  color: #369;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 250%;
+}
+h2,
+h3 {
+  color: #444;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: lighter;
+}
+body {
+  /* margin: 2 em; */
+  background-color: rgb(242, 252, 255);
+}
+body,
+input[type="text"],
+button {
+  color: #333;
+  font-family: Cambria, Georgia, serif;
+}
+a:link,
+a:visited {
+  color: rgb(48, 55, 58);
+  text-decoration: none;
+}
+a:hover {
+  color: rgb(61, 69, 73);
+  text-decoration: underline;
+}
+/* everywhere else */
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.marker_position_label {
+  /* display: table; */
+  color: red;
+  /* background-color: white; */
+  font-size: medium;
+  font-weight: bold;
+  text-decoration: dotted;
+}
+
+.form_container_large,
+.form_container_small {
+  width: 98vw;
+  /* background-color: #369; */
+  display: flex;
+  justify-content: center;
+}
+.inner_form_container {
+  width: 50%;
+}
+
+@media screen and (max-width: 600px) {
+  .inner_form_container {
+    width: 90vw;
+  }
+}

@@ -1,0 +1,35 @@
+<div class="form_container_small">
+<div class="shadow p-3 mb-5 bg-body rounded">
+    <div class=" ">
+      <div class=" ">
+        <h3>Sign In</h3>
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Email Address" #username required>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" placeholder="Password" #userpassword required>
+        </div>
+        <!-- Calling SignIn Api from AuthService -->
+        <div class="mb-3">
+          <input type="button" class="btn btn-info" value="Log in" (click)="authService.signIn(username.value, userpassword.value)">
+        </div>
+        <div class="mb-3">
+          <span class="or"><span class="orInner">Or</span></span>
+        </div>
+        <!-- Calling GoogleAuth Api from AuthService -->
+        <div class="btn btnPrimary mb-3">
+          <button type="button" class="btn btn-danger" (click)="authService.googleAuth()">
+            <i class="fab fa-google-plus-g"></i>
+            Log in with Google
+          </button>
+        </div>
+        <div class="forgotPassword">
+          <span routerLink="/forgot-password">Forgot Password?</span>
+        </div>
+      </div>
+      <div class="redirectToLogin">
+        <span>Don't have an account?<a class="redirect" [routerLink]="['/register']"> Sign Up</a></span>
+      </div>
+    </div>
+  </div>
+  </div>

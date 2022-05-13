@@ -1,0 +1,250 @@
+import { Component, ViewChild, OnInit, NgZone } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { TasksService } from '../shared/services/tasks.service';
+import { TaskType } from '../shared/services/tasktype';
+import {
+  GoogleMap,
+  GoogleMapsModule,
+  MapInfoWindow,
+  MapMarker,
+} from '@angular/google-maps';
+import { Observable } from 'rxjs';
+import { ToastService } from 'angular-toastify';
+import { AuthService } from '../shared/services/auth.service';
+import { environment } from 'src/environments/environment';
+
+@Component({
+  selector: 'app-task-details',
+  templateUrl: './task-details.component.html',
+  styleUrls: ['./task-details.component.css'],
+})
+export class TaskDetailsComponent implements OnInit {
+  TASK_DELETED: string = 'Task Deleted!';
+  TASK_UPDATED: string = 'Task has been updated!';
+  TASK_ERROR: string = 'Sorry! Something went wrong';
+
+  @ViewChild(MapInfoWindow, { static: false }) infoWindow!: MapInfoWindow;
+  infoContent = '';
+  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
+
+  isAdmin: boolean = false;
+
+  //Task Data
+  singleTask!: TaskType;
+  mytask = {};
+  mytaskProofImage: any;
+  coords: any;
+
+  //Google Maps stuff.
+
+  myLat = 38; // Default lat long for map center is DC
+  myLong = -76;
+  myTaskName!: string;
+  address: any = '';
+
+  zoom = 15;
+  center: google.maps.LatLngLiteral = {
+    lat: this.myLat,
+    lng: this.myLong,
+  };
+  options: google.maps.MapOptions = {
+    mapTypeId: 'roadmap',
+    maxZoom: 20,
+    minZoom: 1,
+  };
+
+  svgMarker = this.pinSymbol('red');
+
+  markerOptions: google.maps.MarkerOptions = {
+    draggable: false,
+    animation: google.maps.Animation.DROP,
+    clickable: true,
+    icon: this.svgMarker,
+  };
+
+  markerPositions: google.maps.LatLngLiteral[] = [];
+  markerLabel: google.maps.MarkerLabel = {
+    text: ' ',
+    className: 'marker_position_label',
+  };
+
+  //GEOCODE Stuff
+
+  addressResult: Observable<Object> | undefined;
+
+  constructor(
+    private route: ActivatedRoute,
+    private tasksService: TasksService,
+    public toastService: ToastService,
+    public authService: AuthService,
+    public router: Router
+  ) {}
+
+  async ngOnInit() {
+    this.editAllowed();
+    const routeParams = this.route.snapshot.paramMap;
+    const taskIdFromRoute = routeParams.get('taskId');
+
+    if (taskIdFromRoute !== null) {
+      let response = this.tasksService.getSingleTask(taskIdFromRoute)
+      if (response != undefined) {
+        this.singleTask = response;
+        this.initMap();
+      } else {
+        console.log(response)
+        this.toastService.error(this.TASK_ERROR);
+      }
+    }
+
+  }
+
+  async initMap() {
+    let updatedCoords;
+
+    if (!this.singleTask.data.location.address) {
+      this.myLat = this.singleTask.data.location.latitude;
+      this.myLong = this.singleTask.data.location.longitude;
+    } else {
+      try {
+        updatedCoords = await this.tasksService.getCoords(
+          this.singleTask.data.location.address
+        );
+        this.myLat = updatedCoords.lat;
+        this.myLong = updatedCoords.lng;
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+    this.center = {
+      lat: this.myLat,
+      lng: this.myLong,
+    };
+    this.markerPositions.push({
+      lat: this.myLat,
+      lng: this.myLong,
+    });
+
+    this.myTaskName = this.singleTask.data.taskname;
+    console.log(this.myTaskName);
+
+    this.markerPositions.push({ lat: this.myLat, lng: this.myLong });
+    this.markerLabel.text = this.singleTask.data.taskname;
+
+    try {
+      this.address = await this.tasksService.getTaskAddress(
+        this.myLat,
+        this.myLong
+      );
+      console.log('address:');
+      console.log(this.address.formatted_address);
+      this.infoContent = this.address.formatted_address;
+    } catch (err) {
+      console.log(err);
+    }
+
+    this.pictureProof(this.singleTask.taskid)
+  }
+
+  pictureProof(taskId: string) {
+
+    console.log(`Task ID: ${this.singleTask.taskid}`)
+    let response = this.tasksService.getProof(taskId)
+    response.then(
+      (firstResponse) => {
+        console.log(firstResponse)
+        firstResponse.subscribe({
+          next: (res) => {
+            console.log('Subscribe Response')
+            // let proofResponse = JSON.parse(JSON.stringify(res))
+            // console.log(proofResponse)
+            this.createImage(res)
+            }
+        })
+      })
+  }
+
+
+  createImage(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.mytaskProofImage = reader.result;
+    }, false);
+
+    if (image) {
+      reader.readAsDataURL(image)
+    }
+  }
+
+  openInfo(marker: MapMarker) {
+    this.infoWindow.open(marker);
+    console.log(marker);
+  }
+  setInfo(content: string) {
+    this.infoContent = content;
+    console.log('INFO CONTENT: ' + this.infoContent);
+  }
+
+  editAllowed() {
+    if (
+      this.authService.isLoggedIn === true &&
+      this.authService.loggedInUser.uid === environment.adminUid
+    ) {
+      this.isAdmin = true;
+      console.log("Admin Logged in")
+    }
+  }
+
+  deleteConfirm() {
+    this.tasksService.deleteTask(this.singleTask.taskid);
+    this.toastService.warn(this.TASK_DELETED);
+    this.router.navigate(['/']);
+  }
+
+  statusChange(updatedStatus: string) {
+    let response = this.tasksService.updateTask(
+      this.singleTask.taskid,
+      updatedStatus
+    );
+    this.toastService.info(this.TASK_UPDATED);
+  }
+
+  pinSymbol(color: string) {
+    return {
+        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+        fillColor: color,
+        fillOpacity: 1,
+        strokeColor: '#000',
+        strokeWeight: 2,
+        scale: 1,
+        // anchor: new google.maps.Point(10, 34),
+        labelOrigin: new google.maps.Point(15, 15),
+   };
+  }
+
+  getCSSforStatus(status: string) {
+    let cssClass;
+    switch (status.toLowerCase()) {
+      case 'open':
+        cssClass = 'border-dark';
+        break;
+
+      case 'complete':
+        cssClass = 'border-success';
+        break;
+
+      case 'rejected':
+        cssClass = 'border-danger';
+        break;
+
+      case 'abandonded':
+        cssClass = 'border-warning';
+        break;
+
+      default:
+        cssClass = 'border-dark';
+    }
+
+    return 'card mx-3 mb-3 ' + cssClass;
+  }
+}
