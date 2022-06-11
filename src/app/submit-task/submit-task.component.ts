@@ -28,7 +28,7 @@ export class SubmitTaskComponent implements OnInit {
     minZoom: 1,
     disableDefaultUI: true,
     zoomControl: true,
-    fullscreenControl: true
+    fullscreenControl: false
   }
   zoom = 12;
 
@@ -84,6 +84,16 @@ export class SubmitTaskComponent implements OnInit {
       });
       this.map.fitBounds(bounds)
     })
+    
+  }
+
+  mapEventHandler(event: google.maps.MouseEvent) {
+    console.log(event)
+  }
+
+  addMarker(event: google.maps.MouseEvent) {
+    console.log(event)
+
   }
 
   async submitTask() {

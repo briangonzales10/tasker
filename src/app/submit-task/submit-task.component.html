@@ -19,7 +19,8 @@
             <google-map
             [zoom]="zoom"
             [center]="initialCoords"
-            [options]="mapOptions">
+            [options]="mapOptions"
+            (mapClick)="mapEventHandler($event)">
 
             </google-map>
         </div>   
