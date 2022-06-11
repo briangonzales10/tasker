@@ -119,7 +119,7 @@ export class SubmitTaskComponent implements OnInit {
       lng: event.latLng?.lng(),
       title: 'Title',
       info: 'Info',
-      label: ''
+      label: 'Go Here'
       }
       this.addMarker(props)
     };
@@ -134,7 +134,8 @@ export class SubmitTaskComponent implements OnInit {
       },
       label: {
         color: 'black',
-        text: props.label
+        text: props.label,
+        fontWeight: 'bold'
       },
       title: props.title,
       info: props.info,
