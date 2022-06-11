@@ -94,12 +94,13 @@ export class SubmitTaskComponent implements OnInit {
         } else {
           bounds.extend(place.geometry.location)
         }
+        console.log(place.aspects)
         let props = {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
           title: '',
-          info: place.aspects?.toString(),
-          label: place.aspects?.toString()
+          info: 'Info',
+          label: this.searchField.nativeElement
         }
         this.addMarker(props)
       });
@@ -116,9 +117,9 @@ export class SubmitTaskComponent implements OnInit {
     let props = {
       lat: event.latLng?.lat(),
       lng: event.latLng?.lng(),
-      title: '',
-      info: '',
-      label: ''
+      title: 'Title',
+      info: 'Info',
+      label: 'Label'
       }
       this.addMarker(props)
     };
@@ -132,13 +133,13 @@ export class SubmitTaskComponent implements OnInit {
         lng: props.lng
       },
       label: {
-        color: 'red',
+        color: 'black',
         text: `${props.label}`
       },
       title: `${props.title}`,
       info: `${props.info}`,
       options: {
-        animation: google.maps.Animation.BOUNCE
+        animation: google.maps.Animation.DROP
       }
     });
 
