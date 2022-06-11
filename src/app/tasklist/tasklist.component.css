@@ -21,13 +21,14 @@
         align-content: center;
     }
 
-    /* .img-fluid {
-        height: 30vh;
-        min-width: 350px;
-    } */
+    .img-fluid {
+        height: 60px;
+        width: auto;
+    }
 
     .card {
         min-width: 350px;
+        display: flex;
         flex-direction: row;
     }
     
