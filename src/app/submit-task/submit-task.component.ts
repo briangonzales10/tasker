@@ -100,7 +100,7 @@ export class SubmitTaskComponent implements OnInit {
           lng: place.geometry.location.lng(),
           title: '',
           info: 'Info',
-          label: this.searchField.nativeElement
+          label: place.name
         }
         this.addMarker(props)
       });
@@ -119,7 +119,7 @@ export class SubmitTaskComponent implements OnInit {
       lng: event.latLng?.lng(),
       title: 'Title',
       info: 'Info',
-      label: 'Label'
+      label: ''
       }
       this.addMarker(props)
     };
@@ -134,10 +134,10 @@ export class SubmitTaskComponent implements OnInit {
       },
       label: {
         color: 'black',
-        text: `${props.label}`
+        text: props.label
       },
-      title: `${props.title}`,
-      info: `${props.info}`,
+      title: props.title,
+      info: props.info,
       options: {
         animation: google.maps.Animation.DROP
       }
