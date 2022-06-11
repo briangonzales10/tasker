@@ -25,3 +25,9 @@
   width: 50%;
   justify-content: right;
 }
+
+@media screen and (max-width: 740px) {
+  .details_container {
+      width: 100%
+  }
+}
