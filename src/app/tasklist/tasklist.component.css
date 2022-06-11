@@ -14,12 +14,11 @@
 }
 @media screen and (max-width: 600px) {
     #cards_outer_container {
-        width: 90%;
-        background-color: chartreuse;
+        width: 98%;
         flex-direction: column;
         align-content: center;
     }
-
+/*
     .img-fluid {
         height: 30vh;
         min-width: 350px;
@@ -28,6 +27,7 @@
     .card {
         min-width: 350px;
     }
+    */
 }
 
 
