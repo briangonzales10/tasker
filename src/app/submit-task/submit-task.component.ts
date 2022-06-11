@@ -7,8 +7,8 @@ import { TasksService } from '../shared/services/tasks.service';
 import { AuthService } from '../shared/services/auth.service';
 
 export interface markerProps {
-  lat: number | undefined;
-  lng: number | undefined;
+  lat: any | undefined;
+  lng: any | undefined;
   title: string | undefined;
   info: string | undefined;
   label: string | undefined;
@@ -128,8 +128,8 @@ export class SubmitTaskComponent implements OnInit {
     this.markers = [];
     this.markers.push({
       position: {
-        lat: `${props.lat}`,
-        lng: `${props.lng}`
+        lat: props.lat,
+        lng: props.lng
       },
       label: {
         color: 'red',
