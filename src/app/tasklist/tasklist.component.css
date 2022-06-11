@@ -13,12 +13,13 @@
     justify-content: center;
 }
 @media screen and (max-width: 600px) {
-    #cards_outer_container {
+/*   
+ #cards_outer_container {
         width: 98%;
         flex-direction: column;
         align-content: center;
     }
-/*
+
     .img-fluid {
         height: 30vh;
         min-width: 350px;
