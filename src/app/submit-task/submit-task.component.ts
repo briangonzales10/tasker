@@ -6,6 +6,12 @@ import { ToastService } from 'angular-toastify';
 import { TasksService } from '../shared/services/tasks.service';
 import { AuthService } from '../shared/services/auth.service';
 
+export interface markerProps {
+  title: string;
+  info: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-submit-task',
   templateUrl: './submit-task.component.html',
@@ -31,6 +37,8 @@ export class SubmitTaskComponent implements OnInit {
     fullscreenControl: false
   }
   zoom = 12;
+
+  markers = [] as any;
 
   //Form Stuff
   public taskForm: FormGroup;
@@ -87,12 +95,39 @@ export class SubmitTaskComponent implements OnInit {
     
   }
 
-  mapEventHandler(event: google.maps.MouseEvent) {
+  mapEventHandler(action: string, event: google.maps.MapMouseEvent) {
     console.log(event)
+
+    if (action == 'mapClick') {
+    
+    let props = {
+       title: '',
+       info: '',
+       label: ''
+      }
+      this.addMarker(event, props)
+    }
+
   }
 
-  addMarker(event: google.maps.MouseEvent) {
+  addMarker(event: google.maps.MapMouseEvent, props: markerProps) {
+    this.markers = [];
     console.log(event)
+    this.markers.push({
+      position: {
+        lat: event.latLng?.lat(),
+        lng: event.latLng?.lng()
+      },
+      label: {
+        color: 'red',
+        text: `${props.label}`
+      },
+      title: `${props.title}`,
+      info: `${props.info}`,
+      options: {
+        animation: google.maps.Animation.BOUNCE
+      }
+    });
 
   }
 

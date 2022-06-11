@@ -20,8 +20,16 @@
             [zoom]="zoom"
             [center]="initialCoords"
             [options]="mapOptions"
-            (mapClick)="mapEventHandler($event)">
-
+            (mapClick)="mapEventHandler('mapClick', $event)">
+                <map-marker
+                #markerElem="mapMarker"
+                *ngFor="let marker of markers"
+                [position]="marker.position"
+                [label]="marker.label"
+                [title]="marker.title"
+                [options]="marker.options"
+                (mapClick)="openInfo(markerElem, marker.info)">
+                </map-marker>
             </google-map>
         </div>   
     <!-- </div> -->
