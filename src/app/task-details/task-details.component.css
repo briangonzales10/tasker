@@ -20,6 +20,11 @@
   justify-content: right;
 }
 
+.center_map_container {
+  display: flex;
+  justify-content: center;
+}
+
 @media screen and (max-width: 740px) {
   .details_container {
       width: 100%
