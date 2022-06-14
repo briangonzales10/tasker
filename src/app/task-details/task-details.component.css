@@ -2,18 +2,6 @@
   width: 60vw;
 }
 
-.map_container {
-  width: 500px;
-  height: 500px;
-  justify-content: center;
-  align-content: center;
-  display: flex;
-}
-
-.map-container {
-  width: 500px;
-  height: 500px;
-}
 
 .details_header {
   width: 100%;
@@ -38,23 +26,3 @@
   }
 }
 
-@media screen and (max-width: 500px) {
-  .map-container {
-      width: 400px;
-      height: 400px;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .map-container {
-      width: 300px;
-      height: 300px;
-  }
-}
-
-@media screen and (max-width: 300px) {
-  .map-container {
-      width: 200px;
-      height: 200px;
-  }
-}

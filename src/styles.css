@@ -55,6 +55,19 @@ a:hover {
   width: 50%;
 }
 
+.map_container {
+  width: 500px;
+  height: 500px;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+}
+.map-container {
+  width: 500px;
+  height: 500px;
+}
+
+
 @media screen and (max-width: 600px) {
   .inner_form_container {
     width: 95vw;
