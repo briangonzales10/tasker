@@ -12,24 +12,11 @@
         width: 100%
     }
 }
-  
-@media screen and (max-width: 500px) {
-    .map-container {
-        width: 400px;
-        height: 400px;
-    }
-}
 
-@media screen and (max-width: 400px) {
-    .map-container {
+@media screen and (max-width: 500px) {
+    
+    .map_container {
         width: 300px;
         height: 300px;
-    }
-}
-
-@media screen and (max-width: 300px) {
-    .map-container {
-        width: 200px;
-        height: 200px;
     }
 }

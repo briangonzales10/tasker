@@ -30,7 +30,12 @@
     </div>
     <div class="details_body">
       <div class="map_container">
-        <google-map [zoom]="zoom" [center]="center" [options]="options">
+        <google-map 
+        [zoom]="zoom" 
+        [center]="center" 
+        [options]="options"
+        [width]="null"
+        [height]="null">
           <map-marker
             #somemarker="mapMarker"
             *ngFor="let marker of markerPositions"

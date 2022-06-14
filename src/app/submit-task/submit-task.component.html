@@ -15,11 +15,13 @@
         <input #mapSearchField class="myMapSearchField form-control" formControlName="location" type="text" name="location" placeholder="Address Search" />
         </div>
         <div class="center_container "> 
-            
+            <div class="map_container">
             <google-map
             [zoom]="zoom"
             [center]="initialCoords"
             [options]="mapOptions"
+            [width]="null"
+            [height]="null"
             (mapClick)="mapEventHandler('mapClick', $event)">
                 <map-marker
                 #markerElem="mapMarker"
@@ -31,6 +33,7 @@
                 (mapClick)="openInfo(markerElem, marker.info)">
                 </map-marker>
             </google-map>
+            </div>
         </div>   
     <!-- </div> -->
     </div>
