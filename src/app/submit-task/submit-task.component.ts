@@ -1,10 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap } from '@angular/google-maps';
+import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SubmitDataLocation, SubmitTask } from '../shared/services/submit-task';
 import { ToastService } from 'angular-toastify';
 import { TasksService } from '../shared/services/tasks.service';
 import { AuthService } from '../shared/services/auth.service';
+
+export interface markerProps {
+  lat: any | undefined;
+  lng: any | undefined;
+  title: string | undefined;
+  info: string | undefined;
+  label: string | undefined;
+}
 
 @Component({
   selector: 'app-submit-task',
@@ -14,6 +22,8 @@ import { AuthService } from '../shared/services/auth.service';
 export class SubmitTaskComponent implements OnInit {
   @ViewChild('mapSearchField') searchField!: ElementRef;
   @ViewChild(GoogleMap) map!: GoogleMap;
+  @ViewChild(MapInfoWindow, {static: false}) info!: MapInfoWindow;
+
 
   private TASK_ADD_ERROR:string = "Task could not be added!"
   //Google Map Stuff
@@ -28,9 +38,13 @@ export class SubmitTaskComponent implements OnInit {
     minZoom: 1,
     disableDefaultUI: true,
     zoomControl: true,
-    fullscreenControl: true
+    fullscreenControl: false
   }
   zoom = 12;
+
+  markers = [] as any;
+  infoContent = '';
+  mapClass: any;
 
   //Form Stuff
   public taskForm: FormGroup;
@@ -81,9 +95,61 @@ export class SubmitTaskComponent implements OnInit {
         } else {
           bounds.extend(place.geometry.location)
         }
+        console.log(place.aspects)
+        let props = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+          title: '',
+          info: 'Info',
+          label: place.name
+        }
+        this.addMarker(props)
       });
       this.map.fitBounds(bounds)
     })
+    
+  }
+
+  mapEventHandler(action: string, event: google.maps.MapMouseEvent) {
+    console.log(event)
+
+    if (action == 'mapClick') {
+    
+    let props = {
+      lat: event.latLng?.lat(),
+      lng: event.latLng?.lng(),
+      title: 'Title',
+      info: 'Info',
+      label: 'Go Here'
+      }
+      this.addMarker(props)
+    };
+  };
+
+  addMarker(props: markerProps) {
+    this.markers = [];
+    this.markers.push({
+      position: {
+        lat: props.lat,
+        lng: props.lng
+      },
+      label: {
+        color: 'black',
+        text: props.label,
+        fontWeight: 'bold'
+      },
+      title: props.title,
+      info: props.info,
+      options: {
+        animation: google.maps.Animation.DROP
+      }
+    });
+
+  }
+
+  openInfo(marker: MapMarker, content: string) {
+    this.infoContent = content;
+    this.info.open(marker)
   }
 
   async submitTask() {

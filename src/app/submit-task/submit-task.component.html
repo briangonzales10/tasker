@@ -1,12 +1,5 @@
-<div class="mb-3 mx-3 p-3">
-    <button class="btn btn-info mx-3 " type="button" (click)="toastButton('info', 'testing')">Info Toast</button>
-    <button class="btn btn-primary " type="button" (click)="toastButton('success', 'testing')">Success Toast</button>
-    <button class="btn btn-warning mx-3 " type="button" (click)="toastButton('warn', 'testing')">Warning Toast</button>
-    <button class="btn btn-danger" type="button" (click)="toastButton('error', 'testing')">Error Toast</button>
-</div>
-
 <div class="form_container_large">
-<div class="shadow p-3 w-75 mb-5 bg-body rounded ">
+<div class=" shadow p-3 mb-5 bg-body rounded task_form_container">
     <form [formGroup]="taskForm" (ngSubmit)="submitTask()">
     <div class="mb-3">
         <label for="taskname" class="form-label">Task Name<span class="formbuilder-required">*</span></label>
@@ -22,13 +15,25 @@
         <input #mapSearchField class="myMapSearchField form-control" formControlName="location" type="text" name="location" placeholder="Address Search" />
         </div>
         <div class="center_container "> 
-            
+            <div class="map_container">
             <google-map
             [zoom]="zoom"
             [center]="initialCoords"
-            [options]="mapOptions">
-
+            [options]="mapOptions"
+            [width]="null"
+            [height]="null"
+            (mapClick)="mapEventHandler('mapClick', $event)">
+                <map-marker
+                #markerElem="mapMarker"
+                *ngFor="let marker of markers"
+                [position]="marker.position"
+                [label]="marker.label"
+                [title]="marker.title"
+                [options]="marker.options"
+                (mapClick)="openInfo(markerElem, marker.info)">
+                </map-marker>
             </google-map>
+            </div>
         </div>   
     <!-- </div> -->
     </div>

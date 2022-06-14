@@ -29,8 +29,14 @@
       </div>
     </div>
     <div class="details_body">
+      <div class="center_map_container">
       <div class="map_container">
-        <google-map [zoom]="zoom" [center]="center" [options]="options">
+        <google-map 
+        [zoom]="zoom" 
+        [center]="center" 
+        [options]="options"
+        [width]="null"
+        [height]="null">
           <map-marker
             #somemarker="mapMarker"
             *ngFor="let marker of markerPositions"
@@ -42,6 +48,7 @@
           </map-marker>
           <map-info-window>{{ infoContent }}</map-info-window>
         </google-map>
+      </div>
       </div>
       <p class="card-text">Status: {{ singleTask.data.status }}</p>
       <div class="card-text" *ngIf="singleTask.data.status === 'COMPLETE'">
