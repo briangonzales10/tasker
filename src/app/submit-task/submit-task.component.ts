@@ -73,9 +73,6 @@ export class SubmitTaskComponent implements OnInit {
       console.warn(error)
     }
     this.uid = user.uid;
-    this.map.width = null;
-    this.map.height = null;
-    this.mapClass = this.map.googleMap?.getDiv().className
     
   }
 //TODO: Update to extract Lat/Long data, and maybe address as well?
