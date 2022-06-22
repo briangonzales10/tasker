@@ -4,7 +4,6 @@ export interface SubmitTask {
     remarks: string;
     isPublic: boolean;
     uid: string;
-    tokenId: string;
 }
 
 export interface SubmitDataLocation {
