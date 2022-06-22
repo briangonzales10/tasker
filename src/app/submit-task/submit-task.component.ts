@@ -202,7 +202,8 @@ export class SubmitTaskComponent implements OnInit {
           console.log(res)
         }),
         error: (err => {
-          this.toastButton('error', err)
+          this.toastButton('error', "Something went wrong!");
+          console.log(err);
         }),
       })
   }
