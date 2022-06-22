@@ -83,7 +83,7 @@ export class TasksService {
   }
 
   async submitTaskToDB(userTask: SubmitTask): Promise<Observable<string>> {
-    let response = await this.backendService.submitTaskToDB(userTask);
+    let response = this.backendService.submitTaskToDB(userTask);
 
     //Data submitted to server is not same as response so we can't load directly to dataStore
     this.loadInitData();
