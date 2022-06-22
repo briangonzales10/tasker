@@ -192,7 +192,6 @@ export class SubmitTaskComponent implements OnInit {
           location: userLocation,
           isPublic: userIsPublic,
           uid: this.uid,
-          tokenId: userToken
       }
       
   let response = await this.tasksService.submitTaskToDB(postTask);
