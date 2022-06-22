@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastService } from 'angular-toastify';
-import { Toast } from 'angular-toastify/lib/toast';
 import { BackendService } from 'src/app/shared/services/backend.service';
 
 @Component({
