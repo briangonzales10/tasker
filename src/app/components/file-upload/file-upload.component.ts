@@ -46,7 +46,7 @@ export class FileUploadComponent implements OnInit {
     }
 
     const fileData = new FormData();
-    fileData.append('proof', file)
+    fileData.append('file', file)
 
     let response = this.backend.uploadFile(this.taskId, fileData)
     response.subscribe({
@@ -60,7 +60,6 @@ export class FileUploadComponent implements OnInit {
       }
     })
     this.resetForm()
-    // response.subscribe( res => this.toastService.info(res.toString()))
   }
 
   resetForm() {
