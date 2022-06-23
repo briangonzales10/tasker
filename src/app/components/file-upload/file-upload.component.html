@@ -1,6 +1,6 @@
 <form encType="multipart/form-data" [formGroup]="proofForm">
     <div class="input-group mb-3">
-        <input type="file" class="form-control" ref="proof" name="proof" id="proof" (change)="onFileSelected($event)" #fileUpload>
+        <input type="file" class="form-control" name="file" id="file" (change)="onFileSelected($event)" #fileUpload>
         <label class="input-group-text" for="proof">Upload</label>
     </div>
     <button class="invisible" (click)="fileUpload.click()"></button>
