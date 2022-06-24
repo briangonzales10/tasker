@@ -14,7 +14,7 @@ import { TasksService } from 'src/app/shared/services/tasks.service';
 export class UserSettingsComponent implements OnInit {
 
   user: any;
-  public userForm: FormGroup;
+  public userForm!: FormGroup;
   private URL_REGEXP = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
   tasksAmount: any;
   userTasks: any;
@@ -25,6 +25,9 @@ export class UserSettingsComponent implements OnInit {
     private taskService: TasksService,
     private fb: FormBuilder
   ) {
+   }
+
+  async ngOnInit() {
     this.userForm = this.fb.group({
       displayname: [''],
       emailAddress: ['', Validators.email],
@@ -32,9 +35,6 @@ export class UserSettingsComponent implements OnInit {
       newPassword: [''],
       currentPassword: ['', Validators.required]
     })
-   }
-
-  async ngOnInit() {
     this.user = this.authService.loggedInUser;
     this.userTasks = this.taskService.userTasks;
   }

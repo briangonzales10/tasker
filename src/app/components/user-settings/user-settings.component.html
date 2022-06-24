@@ -35,33 +35,42 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="userForm" (ngSubmit)="updateUser()">
-            <div class="mb-3">
-                <label for="displayname" class="form-label">Display Name<span class="formbuilder-required">*</span></label>
-                
-                <input type="text" placeholder="User Display Name" class="form-control" formControlName="displayname" name="displayname" >
-            </div>
+          <div class="mb-3">
+                <label for="displayname" class="form-label">Display Name</label>
+                <input type="text" placeholder="User Display Name" class="form-control" formControlName="displayname" name="displayname">
+          </div>
  
+          <div class="mb-3">
+                <label for="emailAddress" class="form-check-label">Email</label>
+                <input type="text" placeholder="{{ user.email }}" class="form-control" formControlName="emailAddress" name="emailAddress">
+          </div>
 
-            <div class="mb-3">
-                <label for="emailaddress" class="form-check-label">New Email<span class="formbuilder-required">*</span></label>
-                <input type="text" placeholder="Updated Email Address" class="form-control" formControlName="emailaddress" name="emailaddress" >
+          <div class="mb-3">
+              <label for="photoURL" class="form-check-label">Photo URL</label>
+              <input type="text" placeholder="Photo URL" class="form-control" formControlName="photoURL" name="photoURL">
+          </div>
 
-            
-            </div>
-            <div class="mb-3">
-                <div class="formbuilder-button">
-                <button type="submit" class="btn-info btn" [disabled]="!userForm.valid" name="submitButton" access="false"  id="submitButton">Update</button> 
-            </div>
-        
-            </div>
-        </form>
+          <div class="mb-3">
+              <label for="newPassword" class="form-check-label">New Password</label>
+              <input type="password" placeholder="" class="form-control" formControlName="newPassword" name="newPassword">
+          </div>
+
+          <div class="mb-3">
+              <label for="currentPassword" class="form-check-label">Current Password<span class="formbuilder-required">*</span></label>
+              <input type="currentPassword" placeholder="" class="form-control" formControlName="currentPassword" name="currentPassword">
+          </div>
+
+      </form>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn-info btn mx-3" [disabled]="!userForm.valid" data-bs-dismiss="modal" name="submitButton" access="false" (click)="updateUser()"  id="submitButton">Update</button> 
+
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           Cancel
         </button>
 
       </div>
+      
     </div>
   </div>
 </div>
