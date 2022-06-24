@@ -154,45 +154,45 @@ export class SubmitTaskComponent implements OnInit {
     this.info.open(marker)
   }
 
-  async submitTask() {
-    'use strict';
+async submitTask() {
+  'use strict';
 
-    let coords: any = {
-      lat: '',
-      lng: ''
-    }
+  let coords: any = {
+    lat: '',
+    lng: ''
+  }
 
-    try {
-        coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
-    } catch (err) {
-      console.warn("could not get coords")
-    }
+  try {
+      coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
+  } catch (err) {
+    console.warn("could not get coords")
+  }
 
-    let userTaskname = this.taskForm.get('taskname')!.value;
-    let userAddress = this.searchField.nativeElement.value;
-    let userRemarks = this.taskForm.get('remarks')!.value;
-    let userIsPublic = this.taskForm.get('isPublic')?.value!;
-    let userLocation: SubmitDataLocation = {
-      address: userAddress,
-      latitude: coords.lat, //will update lat + long later
-      longitude: coords.lng
-    }
+  let userTaskname = this.taskForm.get('taskname')!.value;
+  let userAddress = this.searchField.nativeElement.value;
+  let userRemarks = this.taskForm.get('remarks')!.value;
+  let userIsPublic = this.taskForm.get('isPublic')?.value!;
+  let userLocation: SubmitDataLocation = {
+    address: userAddress,
+    latitude: coords.lat, //will update lat + long later
+    longitude: coords.lng
+  }
 
-    console.log("TaskName " + userTaskname)
-    console.log("remarks: " + userRemarks)
+  console.log("TaskName " + userTaskname)
+  console.log("remarks: " + userRemarks)
 
+  if (!userTaskname || !userRemarks) {
+    return;
+  }
 
-    if (userTaskname !== null && userRemarks !== null) {
-      
-
-      const postTask: SubmitTask = {
-          taskname: userTaskname,
-          remarks: userRemarks,
-          location: userLocation,
-          isPublic: userIsPublic,
-          uid: this.uid,
-      }
-      
+  const postTask: SubmitTask = {
+      taskname: userTaskname,
+      remarks: userRemarks,
+      location: userLocation,
+      isPublic: userIsPublic,
+      uid: this.uid,
+  }
+  console.log(postTask)
   let response = await this.tasksService.submitTaskToDB(postTask);
       response.subscribe({
         next:  (res => { 
@@ -204,7 +204,7 @@ export class SubmitTaskComponent implements OnInit {
           console.log(err);
         }),
       })
-  }
+    
   this.resetForm();
 }
 
