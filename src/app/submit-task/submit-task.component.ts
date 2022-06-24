@@ -1,10 +1,19 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GoogleMap } from '@angular/google-maps';
+import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SubmitDataLocation, SubmitTask } from '../shared/services/submit-task';
 import { ToastService } from 'angular-toastify';
 import { TasksService } from '../shared/services/tasks.service';
 import { AuthService } from '../shared/services/auth.service';
+import { Router } from '@angular/router';
+
+export interface markerProps {
+  lat: any | undefined;
+  lng: any | undefined;
+  title: string | undefined;
+  info: string | undefined;
+  label: string | undefined;
+}
 
 @Component({
   selector: 'app-submit-task',
@@ -14,6 +23,8 @@ import { AuthService } from '../shared/services/auth.service';
 export class SubmitTaskComponent implements OnInit {
   @ViewChild('mapSearchField') searchField!: ElementRef;
   @ViewChild(GoogleMap) map!: GoogleMap;
+  @ViewChild(MapInfoWindow, {static: false}) info!: MapInfoWindow;
+
 
   private TASK_ADD_ERROR:string = "Task could not be added!"
   //Google Map Stuff
@@ -28,12 +39,16 @@ export class SubmitTaskComponent implements OnInit {
     minZoom: 1,
     disableDefaultUI: true,
     zoomControl: true,
-    fullscreenControl: true
+    fullscreenControl: false
   }
   zoom = 12;
 
+  markers = [] as any;
+  infoContent = '';
+  mapClass: any;
+
   //Form Stuff
-  public taskForm: FormGroup;
+  public taskForm!: FormGroup;
 
   uid: string = ''; //Will need to move this to a separate dataservice...
 
@@ -41,17 +56,18 @@ export class SubmitTaskComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private tasksService: TasksService,
-    private authService: AuthService
-  ) {
-      this.taskForm = this.fb.group({
-        taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-        location: ['', Validators.required],
-        remarks: ['', Validators.required],
-        isPublic: ['', Validators.required]
-      })
-   }
+    private authService: AuthService,
+    public router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.taskForm = this.fb.group({
+      taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      location: ['', Validators.required],
+      remarks: ['', Validators.required],
+      isPublic: ['', Validators.required]
+    });
+
     let user;
     try {
       user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -81,60 +97,119 @@ export class SubmitTaskComponent implements OnInit {
         } else {
           bounds.extend(place.geometry.location)
         }
+        console.log(place.aspects)
+        let props = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+          title: '',
+          info: 'Info',
+          label: place.name
+        }
+        this.addMarker(props)
       });
       this.map.fitBounds(bounds)
     })
+    
   }
 
-  async submitTask() {
+  mapEventHandler(action: string, event: google.maps.MapMouseEvent) {
+    console.log(event)
 
-    const userToken = await this.authService.getToken();
-
-    let coords: any = {
-      lat: '',
-      lng: ''
-    }
-
-    try {
-        coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
-    } catch (err) {
-      console.warn("could not get coords")
-    }
-
-    let userTaskname = this.taskForm.get('taskname')!.value;
-    let userAddress = this.searchField.nativeElement.value;
-    let userRemarks = this.taskForm.get('remarks')!.value;
-    let userIsPublic = this.taskForm.get('isPublic')?.value!;
-    let userLocation: SubmitDataLocation = {
-      address: userAddress,
-      latitude: coords.lat, //will update lat + long later
-      longitude: coords.lng
-    }
-
-    console.log("TaskName " + userTaskname)
-    console.log("remarks: " + userRemarks)
-
-
-    if (userTaskname !== null && userRemarks !== null) {
-      
-
-      const postTask: SubmitTask = {
-          taskname: userTaskname,
-          remarks: userRemarks,
-          location: userLocation,
-          isPublic: userIsPublic,
-          uid: this.uid,
-          tokenId: userToken
+    if (action == 'mapClick') {
+    
+    let props = {
+      lat: event.latLng?.lat(),
+      lng: event.latLng?.lng(),
+      title: 'Title',
+      info: 'Info',
+      label: 'Go Here'
       }
-      
-  let response = await this.tasksService.submitTaskToDB(postTask);
-      response.subscribe( res => this.toastButton('info', res))
+      this.addMarker(props)
+    };
+  };
+
+  addMarker(props: markerProps) {
+    this.markers = [];
+    this.markers.push({
+      position: {
+        lat: props.lat,
+        lng: props.lng
+      },
+      label: {
+        color: 'black',
+        text: props.label,
+        fontWeight: 'bold'
+      },
+      title: props.title,
+      info: props.info,
+      options: {
+        animation: google.maps.Animation.DROP
+      }
+    });
+
   }
+
+  openInfo(marker: MapMarker, content: string) {
+    this.infoContent = content;
+    this.info.open(marker)
+  }
+
+async submitTask() {
+  let coords: any = {
+    lat: '',
+    lng: ''
+  };
+
+  try {
+      coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
+  } catch (err) {
+    console.warn("could not get coords");
+  }
+
+  let userTaskname = this.taskForm.get('taskname')!.value;
+  let userAddress = this.searchField.nativeElement.value;
+  let userRemarks = this.taskForm.get('remarks')!.value;
+  let userIsPublic = this.taskForm.get('isPublic')?.value!;
+  let userLocation: SubmitDataLocation = {
+    address: userAddress,
+    latitude: coords.lat, //will update lat + long later
+    longitude: coords.lng
+  };
+
+  console.log("TaskName " + userTaskname);
+  console.log("remarks: " + userRemarks);
+
+  if (!userTaskname || !userRemarks) {
+    return;
+  };
+
+  const postTask: SubmitTask = {
+      taskname: userTaskname,
+      remarks: userRemarks,
+      location: userLocation,
+      isPublic: userIsPublic,
+      uid: this.uid,
+  };
+  console.log(postTask);
+  let response = this.tasksService.submitTaskToDB(postTask)
+  
+  response.subscribe({
+    next:  (res => { 
+      this.toastButton('info', res);
+      console.log(res)
+    }),
+    error: (err => {
+      this.toastButton('error', "Something went wrong!");
+      console.log(err);
+    }),
+  });
+    
   this.resetForm();
 }
 
   resetForm() {
-    this.taskForm.reset()
+    this.taskForm.reset();
+    this.router.navigate(['/']);
   }
 
   toastButton(type: string, msg: string) {

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ToastService } from 'angular-toastify';
-import { Toast } from 'angular-toastify/lib/toast';
 import { BackendService } from 'src/app/shared/services/backend.service';
 
 @Component({
@@ -47,7 +46,7 @@ export class FileUploadComponent implements OnInit {
     }
 
     const fileData = new FormData();
-    fileData.append('proof', file)
+    fileData.append('file', file)
 
     let response = this.backend.uploadFile(this.taskId, fileData)
     response.subscribe({
@@ -61,7 +60,6 @@ export class FileUploadComponent implements OnInit {
       }
     })
     this.resetForm()
-    // response.subscribe( res => this.toastService.info(res.toString()))
   }
 
   resetForm() {

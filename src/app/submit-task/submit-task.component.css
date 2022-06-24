@@ -2,3 +2,16 @@
     display: flex;
     justify-content: center;
 }
+
+.task_form_container {
+    width: 75%
+}
+
+
+
+@media screen and (max-width: 740px) {
+    .task_form_container {
+        width: 100%
+    }
+}
+

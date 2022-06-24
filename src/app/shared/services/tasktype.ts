@@ -13,6 +13,7 @@ export interface TaskData {
     location: TaskDataLocation;
     remarks: string;
     isPublic: boolean;
+    proof: Proof;
 }
 
 export interface  TaskDataTime {
@@ -24,4 +25,9 @@ export interface TaskDataLocation {
     address: any;
     latitude: number;
     longitude: number;
+}
+
+export interface Proof {
+    filename: string;
+    proofURL: string;
 }

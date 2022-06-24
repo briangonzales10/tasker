@@ -11,15 +11,13 @@ import { TasksService } from '../shared/services/tasks.service';
 })
 export class TasklistComponent implements OnInit {
 
-  publicTasksArray: any;
+  publicTasksArray: any = this.taskService.allTasks;
  
 
   constructor(
     private taskService: TasksService,
     public authService: AuthService
-    ) {
-      this.publicTasksArray = this.taskService.allTasks;
-     }
+    ) {}
 
   ngOnInit() {
   }

@@ -4,21 +4,24 @@
       <div id="details_header_title">
         <h3>{{ singleTask.data.taskname }}</h3>
       </div>
-      <div *ngIf="isAdmin" id="details_header_adminControl">
-        <button
-          class="btn btn-danger"
-          data-bs-toggle="modal"
-          data-bs-target="#deleteModal"
-        >
-          Delete
-        </button>
-        <button
-          class="btn btn-secondary mx-1"
-          data-bs-toggle="modal"
-          data-bs-target="#statusModal"
-        >
-          Edit
-        </button>
+    </div>
+    <!-- admin controls start -->
+    <div class="mb-2" *ngIf="isAdmin" id="details_header_adminControl">
+      <button
+        class="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteModal"
+      >
+        Delete
+      </button>
+      <button
+        class="btn btn-secondary mx-1"
+        data-bs-toggle="modal"
+        data-bs-target="#statusModal"
+      >
+        Edit
+      </button>
+      <div *ngIf="singleTask.data.proof == null">
         <button
         class="btn btn-secondary mx-1"
         data-bs-toggle="modal"
@@ -27,10 +30,17 @@
         Proof
       </button>
       </div>
+      <!-- admin controls end -->
     </div>
     <div class="details_body">
+      <div class="center_map_container">
       <div class="map_container">
-        <google-map [zoom]="zoom" [center]="center" [options]="options">
+        <google-map 
+        [zoom]="zoom" 
+        [center]="center" 
+        [options]="options"
+        [width]="null"
+        [height]="null">
           <map-marker
             #somemarker="mapMarker"
             *ngFor="let marker of markerPositions"
@@ -43,8 +53,9 @@
           <map-info-window>{{ infoContent }}</map-info-window>
         </google-map>
       </div>
-      <p class="card-text">Status: {{ singleTask.data.status }}</p>
-      <div class="card-text" *ngIf="singleTask.data.status === 'COMPLETE'">
+      </div>
+      <p class="card-text mb-2">Status: {{ singleTask.data.status }}</p>
+      <div class="card-text mb-2" *ngIf="singleTask.data.status === 'COMPLETE'">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
       </div>
       
