@@ -17,7 +17,7 @@ export class UserSettingsComponent implements OnInit {
   public userForm!: FormGroup;
   private URL_REGEXP = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
   tasksAmount: any;
-  userTasks: any;
+  userTasks: any = this.taskService.userTasks;
 
   constructor(
     public authService: AuthService,
@@ -36,7 +36,6 @@ export class UserSettingsComponent implements OnInit {
       currentPassword: ['', Validators.required]
     })
     this.user = this.authService.loggedInUser;
-    this.userTasks = this.taskService.userTasks;
   }
 
   async updateUser() {
