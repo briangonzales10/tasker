@@ -35,6 +35,10 @@ a:hover {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+#task-remarks {
+  word-break: break-all;
+}
+
 .marker_position_label {
   /* display: table; */
   color: red;
