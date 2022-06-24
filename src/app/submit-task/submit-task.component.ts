@@ -155,8 +155,7 @@ export class SubmitTaskComponent implements OnInit {
   }
 
   async submitTask() {
-
-    const userToken = await this.authService.getToken();
+    'use strict';
 
     let coords: any = {
       lat: '',
