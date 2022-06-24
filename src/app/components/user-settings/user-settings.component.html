@@ -4,7 +4,7 @@
         <h3 *ngIf="user.displayname == null"><strong></strong> Hello!</h3>
         <p><strong>Email Address:</strong> {{ user.email }}</p>
         <p><strong>Photo:</strong> {{ user.photoUrl }}</p>
-        <p><strong># of Tasks Submitted:</strong> {{ userTasks.length | async }} </p>
+        <p><strong># of Tasks Submitted:</strong> {{ tasksAmount }} </p>
         <button
         class="btn btn-info"
         data-bs-toggle="modal"

@@ -36,6 +36,8 @@ export class UserSettingsComponent implements OnInit {
       currentPassword: ['', Validators.required]
     })
     this.user = this.authService.loggedInUser;
+    this.taskService.userTasks
+      .subscribe(result => {this.tasksAmount = result.length})
     console.log(`USER TASKS: ${this.userTasks}`)
   }
 
