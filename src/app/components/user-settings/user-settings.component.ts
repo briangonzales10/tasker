@@ -15,7 +15,7 @@ export class UserSettingsComponent implements OnInit {
 
   user: any;
   public userForm: FormGroup;
-  private URL_REGEXP = '/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/';
+  private URL_REGEXP = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
   tasksAmount: any;
   userTasks: any;
 
