@@ -19,13 +19,15 @@
         >
           Edit
         </button>
-        <button
-        class="btn btn-secondary mx-1"
-        data-bs-toggle="modal"
-        data-bs-target="#uploadProofModal"
-      >
-        Proof
-      </button>
+        <div *ngIf="singleTask.data.proof == null">
+          <button
+          class="btn btn-secondary mx-1"
+          data-bs-toggle="modal"
+          data-bs-target="#uploadProofModal"
+        >
+          Proof
+        </button>
+        </div>
       </div>
     </div>
     <div class="details_body">

@@ -142,37 +142,10 @@ export class TaskDetailsComponent implements OnInit {
     } catch (err) {
       console.log(err);
     }
-
-    this.pictureProof(this.singleTask.taskid)
-  }
-
-  pictureProof(taskId: string) {
-
-    console.log(`Task ID: ${this.singleTask.taskid}`)
-    let response = this.tasksService.getProof(taskId)
-    response.then(
-      (firstResponse) => {
-        console.log(firstResponse)
-        firstResponse.subscribe({
-          next: (res) => {
-            console.log('Subscribe Response')
-            // let proofResponse = JSON.parse(JSON.stringify(res))
-            // console.log(proofResponse)
-            this.createImage(res)
-            }
-        })
-      })
-  }
-
-
-  createImage(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener("load", () => {
-      this.mytaskProofImage = reader.result;
-    }, false);
-
-    if (image) {
-      reader.readAsDataURL(image)
+    
+    this.mytaskProofImage = this.singleTask.data.proof.proofURL;
+    if (this.mytaskProofImage == null) {
+      this.mytaskProofImage = '/assets/broken-image.png'
     }
   }
 
@@ -220,31 +193,5 @@ export class TaskDetailsComponent implements OnInit {
         // anchor: new google.maps.Point(10, 34),
         labelOrigin: new google.maps.Point(15, 15),
    };
-  }
-
-  getCSSforStatus(status: string) {
-    let cssClass;
-    switch (status.toLowerCase()) {
-      case 'open':
-        cssClass = 'border-dark';
-        break;
-
-      case 'complete':
-        cssClass = 'border-success';
-        break;
-
-      case 'rejected':
-        cssClass = 'border-danger';
-        break;
-
-      case 'abandonded':
-        cssClass = 'border-warning';
-        break;
-
-      default:
-        cssClass = 'border-dark';
-    }
-
-    return 'card mx-3 mb-3 ' + cssClass;
   }
 }
