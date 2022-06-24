@@ -154,58 +154,56 @@ export class SubmitTaskComponent implements OnInit {
     this.info.open(marker)
   }
 
-  async submitTask() {
+async submitTask() {
+  let coords: any = {
+    lat: '',
+    lng: ''
+  };
 
-    const userToken = await this.authService.getToken();
-
-    let coords: any = {
-      lat: '',
-      lng: ''
-    }
-
-    try {
-        coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
-    } catch (err) {
-      console.warn("could not get coords")
-    }
-
-    let userTaskname = this.taskForm.get('taskname')!.value;
-    let userAddress = this.searchField.nativeElement.value;
-    let userRemarks = this.taskForm.get('remarks')!.value;
-    let userIsPublic = this.taskForm.get('isPublic')?.value!;
-    let userLocation: SubmitDataLocation = {
-      address: userAddress,
-      latitude: coords.lat, //will update lat + long later
-      longitude: coords.lng
-    }
-
-    console.log("TaskName " + userTaskname)
-    console.log("remarks: " + userRemarks)
-
-
-    if (userTaskname !== null && userRemarks !== null) {
-      
-
-      const postTask: SubmitTask = {
-          taskname: userTaskname,
-          remarks: userRemarks,
-          location: userLocation,
-          isPublic: userIsPublic,
-          uid: this.uid,
-      }
-      
-  let response = await this.tasksService.submitTaskToDB(postTask);
-      response.subscribe({
-        next:  (res => { 
-          this.toastButton('info', res);
-          console.log(res)
-        }),
-        error: (err => {
-          this.toastButton('error', "Something went wrong!");
-          console.log(err);
-        }),
-      })
+  try {
+      coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
+  } catch (err) {
+    console.warn("could not get coords");
   }
+
+  let userTaskname = this.taskForm.get('taskname')!.value;
+  let userAddress = this.searchField.nativeElement.value;
+  let userRemarks = this.taskForm.get('remarks')!.value;
+  let userIsPublic = this.taskForm.get('isPublic')?.value!;
+  let userLocation: SubmitDataLocation = {
+    address: userAddress,
+    latitude: coords.lat, //will update lat + long later
+    longitude: coords.lng
+  };
+
+  console.log("TaskName " + userTaskname);
+  console.log("remarks: " + userRemarks);
+
+  if (!userTaskname || !userRemarks) {
+    return;
+  };
+
+  const postTask: SubmitTask = {
+      taskname: userTaskname,
+      remarks: userRemarks,
+      location: userLocation,
+      isPublic: userIsPublic,
+      uid: this.uid,
+  };
+  console.log(postTask);
+  let response = this.tasksService.submitTaskToDB(postTask)
+  
+  response.subscribe({
+    next:  (res => { 
+      this.toastButton('info', res);
+      console.log(res)
+    }),
+    error: (err => {
+      this.toastButton('error', "Something went wrong!");
+      console.log(err);
+    }),
+  });
+    
   this.resetForm();
 }
 

@@ -82,8 +82,8 @@ export class TasksService {
     return this.singleTask;
   }
 
-  async submitTaskToDB(userTask: SubmitTask): Promise<Observable<string>> {
-    let response = this.backendService.submitTaskToDB(userTask);
+  submitTaskToDB(userTask: SubmitTask): Observable<string> {
+    let response = this.backendService.submitToDB(userTask);
 
     //Data submitted to server is not same as response so we can't load directly to dataStore
     this.loadInitData();
@@ -115,7 +115,6 @@ export class TasksService {
     let index = taskArray.findIndex( (task) => task.taskid == reqTaskId) 
     if (index) {
       taskStore.next(allCurrentTasks.pop(index))
-      this.toastService.success(this.TASK_DELETE_SUCCESS);
       return true;
     }
     return false;
