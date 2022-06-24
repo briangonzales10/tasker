@@ -36,6 +36,7 @@ export class UserSettingsComponent implements OnInit {
       currentPassword: ['', Validators.required]
     })
     this.user = this.authService.loggedInUser;
+    console.log(`USER TASKS: ${this.userTasks}`)
   }
 
   async updateUser() {
