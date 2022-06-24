@@ -115,7 +115,6 @@ export class TasksService {
     let index = taskArray.findIndex( (task) => task.taskid == reqTaskId) 
     if (index) {
       taskStore.next(allCurrentTasks.pop(index))
-      this.toastService.success(this.TASK_DELETE_SUCCESS);
       return true;
     }
     return false;
