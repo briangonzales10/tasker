@@ -9,7 +9,7 @@
             <div class="card-body">
               <h5 class="card-title">    <a [title]="task.data.taskname"
                 [routerLink]="['/showtask', task.taskid]">{{ task.data.taskname }}</a></h5>
-              <p class="card-text">{{ task.data.remarks }}</p>
+              <p class="card-text task-remarks">{{ task.data.remarks }}</p>
               <p class="card-text">Status: {{ task.data.status }}</p>
             </div>
           </div>
