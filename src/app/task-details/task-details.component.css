@@ -12,12 +12,12 @@
 
 #details_header_title {
   justify-content: flex-start;
-  width: 50%;
+  width: 100%;
 }
 
 #details_header_adminControl {
-  width: 50%;
-  justify-content: right;
+  width: 100%;
+  justify-content: center;
 }
 
 .center_map_container {
