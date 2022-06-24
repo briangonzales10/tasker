@@ -84,7 +84,7 @@ getSingleTask(taskId: string) {
   return this.http.get<TaskType>(`${environment.backendUri}/task/${taskId}`);
 }
 
-submitTaskToDB(userTask: SubmitTask): Observable<string> {
+submitToDB(userTask: SubmitTask): Observable<string> {
   return this.http.post(`${environment.backendUri}/add`, userTask, {
     responseType: 'text'
   });

@@ -155,17 +155,15 @@ export class SubmitTaskComponent implements OnInit {
   }
 
 async submitTask() {
-  'use strict';
-
   let coords: any = {
     lat: '',
     lng: ''
-  }
+  };
 
   try {
       coords = await this.tasksService.getCoords(this.searchField.nativeElement.value)
   } catch (err) {
-    console.warn("could not get coords")
+    console.warn("could not get coords");
   }
 
   let userTaskname = this.taskForm.get('taskname')!.value;
@@ -176,14 +174,14 @@ async submitTask() {
     address: userAddress,
     latitude: coords.lat, //will update lat + long later
     longitude: coords.lng
-  }
+  };
 
-  console.log("TaskName " + userTaskname)
-  console.log("remarks: " + userRemarks)
+  console.log("TaskName " + userTaskname);
+  console.log("remarks: " + userRemarks);
 
   if (!userTaskname || !userRemarks) {
     return;
-  }
+  };
 
   const postTask: SubmitTask = {
       taskname: userTaskname,
@@ -191,19 +189,20 @@ async submitTask() {
       location: userLocation,
       isPublic: userIsPublic,
       uid: this.uid,
-  }
-  console.log(postTask)
-  let response = await this.tasksService.submitTaskToDB(postTask);
-      response.subscribe({
-        next:  (res => { 
-          this.toastButton('info', res);
-          console.log(res)
-        }),
-        error: (err => {
-          this.toastButton('error', "Something went wrong!");
-          console.log(err);
-        }),
-      })
+  };
+  console.log(postTask);
+  let response = this.tasksService.submitTaskToDB(postTask)
+  
+  response.subscribe({
+    next:  (res => { 
+      this.toastButton('info', res);
+      console.log(res)
+    }),
+    error: (err => {
+      this.toastButton('error', "Something went wrong!");
+      console.log(err);
+    }),
+  });
     
   this.resetForm();
 }
