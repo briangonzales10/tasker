@@ -5,6 +5,7 @@ import { SubmitDataLocation, SubmitTask } from '../shared/services/submit-task';
 import { ToastService } from 'angular-toastify';
 import { TasksService } from '../shared/services/tasks.service';
 import { AuthService } from '../shared/services/auth.service';
+import { Router } from '@angular/router';
 
 export interface markerProps {
   lat: any | undefined;
@@ -55,7 +56,8 @@ export class SubmitTaskComponent implements OnInit {
     private fb: FormBuilder,
     private toastService: ToastService,
     private tasksService: TasksService,
-    private authService: AuthService
+    private authService: AuthService,
+    public router: Router
   ) {
       this.taskForm = this.fb.group({
         taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
@@ -190,17 +192,26 @@ export class SubmitTaskComponent implements OnInit {
           location: userLocation,
           isPublic: userIsPublic,
           uid: this.uid,
-          tokenId: userToken
       }
       
   let response = await this.tasksService.submitTaskToDB(postTask);
-      response.subscribe( res => this.toastButton('info', res))
+      response.subscribe({
+        next:  (res => { 
+          this.toastButton('info', res);
+          console.log(res)
+        }),
+        error: (err => {
+          this.toastButton('error', "Something went wrong!");
+          console.log(err);
+        }),
+      })
   }
   this.resetForm();
 }
 
   resetForm() {
-    this.taskForm.reset()
+    this.taskForm.reset();
+    this.router.navigate(['/']);
   }
 
   toastButton(type: string, msg: string) {
