@@ -17,7 +17,7 @@
 
 #details_header_adminControl {
   width: 100%;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .center_map_container {

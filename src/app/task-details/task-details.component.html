@@ -6,7 +6,7 @@
       </div>
     </div>
     <!-- admin controls start -->
-    <div *ngIf="isAdmin" id="details_header_adminControl">
+    <div class="mb-2" *ngIf="isAdmin" id="details_header_adminControl">
       <button
         class="btn btn-danger"
         data-bs-toggle="modal"
@@ -54,8 +54,8 @@
         </google-map>
       </div>
       </div>
-      <p class="card-text">Status: {{ singleTask.data.status }}</p>
-      <div class="card-text" *ngIf="singleTask.data.status === 'COMPLETE'">
+      <p class="card-text mb-2">Status: {{ singleTask.data.status }}</p>
+      <div class="card-text mb-2" *ngIf="singleTask.data.status === 'COMPLETE'">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
       </div>
       
