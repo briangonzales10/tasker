@@ -48,7 +48,7 @@ export class SubmitTaskComponent implements OnInit {
   mapClass: any;
 
   //Form Stuff
-  public taskForm: FormGroup;
+  public taskForm!: FormGroup;
 
   uid: string = ''; //Will need to move this to a separate dataservice...
 
@@ -58,16 +58,16 @@ export class SubmitTaskComponent implements OnInit {
     private tasksService: TasksService,
     private authService: AuthService,
     public router: Router
-  ) {
-      this.taskForm = this.fb.group({
-        taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-        location: ['', Validators.required],
-        remarks: ['', Validators.required],
-        isPublic: ['', Validators.required]
-      })
-   }
+  ) {}
 
   ngOnInit(): void {
+    this.taskForm = this.fb.group({
+      taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+      location: ['', Validators.required],
+      remarks: ['', Validators.required],
+      isPublic: ['', Validators.required]
+    });
+
     let user;
     try {
       user = JSON.parse(localStorage.getItem('user') || '{}')
