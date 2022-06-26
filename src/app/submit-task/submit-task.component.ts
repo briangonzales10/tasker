@@ -178,7 +178,6 @@ async submitTask() {
   let userAddress = this.searchField.nativeElement.value;
   let userRemarks = this.taskForm.get('remarks')!.value;
   let userIsPublic = this.taskForm.get('isPublic')?.value!;
-  let userCategory = this.taskForm.get('category')?.value!;
   let userLocation: SubmitDataLocation = {
     address: userAddress,
     latitude: coords.lat, //will update lat + long later
@@ -187,7 +186,7 @@ async submitTask() {
 
   console.log("TaskName " + userTaskname);
   console.log("remarks: " + userRemarks);
-  console.log("Category: " + userCategory + ' or ' + this.selectedCategory)
+  console.log("Category: " + this.selectedCategory)
 
   if (!userTaskname || !userRemarks) {
     return;
@@ -198,7 +197,7 @@ async submitTask() {
       remarks: userRemarks,
       location: userLocation,
       isPublic: userIsPublic,
-      category: userCategory,
+      category: this.selectedCategory,
       uid: this.uid,
   };
   console.log(postTask);

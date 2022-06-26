@@ -5,7 +5,7 @@ export interface SubmitTask {
     location: SubmitDataLocation;
     remarks: string;
     isPublic: boolean;
-    category: CategoryTypes;
+    category: string;
     uid: string;
 }
 
