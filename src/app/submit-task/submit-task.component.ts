@@ -68,7 +68,7 @@ export class SubmitTaskComponent implements OnInit {
       location: ['', Validators.required],
       remarks: ['', Validators.required],
       isPublic: ['', Validators.required],
-      category: ['']
+      category: ['', Validators.required]
     });
 
     let user;
@@ -173,7 +173,7 @@ async submitTask() {
   let userAddress = this.searchField.nativeElement.value;
   let userRemarks = this.taskForm.get('remarks')!.value;
   let userIsPublic = this.taskForm.get('isPublic')?.value!;
-  let userCategory = this.taskForm.get('category')!.value;
+  let userCategory = this.taskForm.get('category')?.value!;
   let userLocation: SubmitDataLocation = {
     address: userAddress,
     latitude: coords.lat, //will update lat + long later
@@ -182,6 +182,7 @@ async submitTask() {
 
   console.log("TaskName " + userTaskname);
   console.log("remarks: " + userRemarks);
+  console.log("Category: " + userCategory)
 
   if (!userTaskname || !userRemarks) {
     return;
