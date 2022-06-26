@@ -6,7 +6,8 @@
       </div>
     </div>
     <!-- admin controls start -->
-    <div class="mb-2" *ngIf="isAdmin" id="details_header_adminControl">
+
+    <div *ngIf="isAdmin" class="mb-2" id="details_header_adminControl">
       <button
         class="btn btn-danger"
         data-bs-toggle="modal"
@@ -30,8 +31,10 @@
         Proof
       </button>
       </div>
+
       <!-- admin controls end -->
     </div>
+
     <div class="details_body">
       <div class="center_map_container">
       <div class="map_container">
@@ -54,20 +57,25 @@
         </google-map>
       </div>
       </div>
-      <p class="card-text mb-2">Status: {{ singleTask.data.status }}</p>
-      <div class="card-text mb-2" *ngIf="singleTask.data.status === 'COMPLETE'">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
-      </div>
-      
-      <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
+
+      <div id="details_body_lower" class="border border-dark rounded-end p-2">
+<!-- Proof Button Div-->
+        <div class="card-text mb-2" *ngIf="singleTask.data.status === 'COMPLETE'">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
+        </div>
+<!-- Proof Button Div End-->
+      <p class="card-text mb-2"><strong>Category: </strong> {{ myCategory }}</p>
+      <p class="card-text mb-2"><strong>Status: </strong>{{ singleTask.data.status }}</p>
+      <p class="card-text">Remarks: </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
       <p class="card-text">
         <small class="text-muted"
           >Submitted on:
           {{
             singleTask.data.timestamp._seconds * 1000 | date: "MM-dd-yyyy"
           }}</small
-        >
+        > <small *ngIf="singleTask.data.completedTime != null" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM-dd-yyyy" }}</small>
       </p>
+      </div>
     </div>
   </div>
 </div>
