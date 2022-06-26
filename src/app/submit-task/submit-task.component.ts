@@ -68,7 +68,7 @@ export class SubmitTaskComponent implements OnInit {
       location: ['', Validators.required],
       remarks: ['', Validators.required],
       isPublic: ['', Validators.required],
-      category: ['', Validators.required]
+      category: ['']
     });
 
     let user;
