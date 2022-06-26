@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { TasksService } from '../shared/services/tasks.service';
-import { TaskType } from '../shared/services/tasktype';
+import { CategoryTypes, TaskType } from '../shared/services/tasktype';
 import {
   GoogleMap,
   GoogleMapsModule,
@@ -34,6 +34,7 @@ export class TaskDetailsComponent implements OnInit {
   singleTask!: TaskType;
   mytask = {};
   mytaskProofImage: any;
+  myCategory: any;
   coords: any;
 
   //Google Maps stuff.
@@ -90,6 +91,7 @@ export class TaskDetailsComponent implements OnInit {
       let response = this.tasksService.getSingleTask(taskIdFromRoute)
       if (response != undefined) {
         this.singleTask = response;
+        this.myCategory = this.parseCategoryType(this.singleTask.data.category);
         this.initMap();
       } else {
         console.log(response)
@@ -180,6 +182,31 @@ export class TaskDetailsComponent implements OnInit {
       updatedStatus
     );
     this.toastService.info(this.TASK_UPDATED);
+  }
+
+  parseCategoryType(typeString: string): string {
+    let displayedCategory = ''
+    switch(typeString) {
+      case CategoryTypes.Food:
+        displayedCategory = 'Food & Drink';
+        break;
+      case CategoryTypes.Entertainment:
+        displayedCategory = 'Entertainment'
+        break;
+      case CategoryTypes.Experience:
+        displayedCategory = 'Experience'
+        break;
+      case CategoryTypes.Landmark:
+        displayedCategory = 'Landmark or Place'
+        break;
+      case CategoryTypes.Travel:
+        displayedCategory = 'Travel'
+        break;
+      case CategoryTypes.Other:
+        displayedCategory = 'Other'
+        break;
+    }
+    return displayedCategory;
   }
 
   pinSymbol(color: string) {
