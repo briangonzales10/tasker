@@ -6,8 +6,8 @@
       </div>
     </div>
     <!-- admin controls start -->
-    <ng-container *ngIf="isAdmin">
-    <div class="mb-2" id="details_header_adminControl">
+
+    <div *ngIf="isAdmin" class="mb-2" id="details_header_adminControl">
       <button
         class="btn btn-danger"
         data-bs-toggle="modal"
@@ -31,9 +31,10 @@
         Proof
       </button>
       </div>
-    </ng-container>
+
       <!-- admin controls end -->
     </div>
+
     <div class="details_body">
       <div class="center_map_container">
       <div class="map_container">
@@ -56,11 +57,13 @@
         </google-map>
       </div>
       </div>
-      <div id="details_body_lower" class="border border-dark rounded-end">
 
+      <div id="details_body_lower" class="border border-dark rounded-end">
+<!-- Proof Button Div-->
         <div class="card-text mb-2" *ngIf="singleTask.data.status === 'COMPLETE'">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
         </div>
+<!-- Proof Button Div End-->
       <p class="card-text mb-2"><strong>Category: </strong> {{ singleTask.data.category }}</p>
       <p class="card-text mb-2"><strong>Status: </strong>{{ singleTask.data.status }}</p>
       <p class="card-text">Remarks: </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
@@ -71,7 +74,8 @@
             singleTask.data.timestamp._seconds * 1000 | date: "MM-dd-yyyy"
           }}</small
         > <small *ngIf="!singleTask.data.completedTime" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM-dd-yyyy" }}</small>
-      </p></div>
+      </p>
+      </div>
     </div>
   </div>
 </div>
