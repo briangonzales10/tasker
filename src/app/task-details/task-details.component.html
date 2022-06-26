@@ -73,7 +73,7 @@
           {{
             singleTask.data.timestamp._seconds * 1000 | date: "MM-dd-yyyy"
           }}</small
-        > <small *ngIf="!singleTask.data.completedTime" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM-dd-yyyy" }}</small>
+        > <small *ngIf="singleTask.data.completedTime != null" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM-dd-yyyy" }}</small>
       </p>
       </div>
     </div>
