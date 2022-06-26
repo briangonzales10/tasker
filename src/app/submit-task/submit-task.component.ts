@@ -51,6 +51,7 @@ export class SubmitTaskComponent implements OnInit {
 
   //Form Stuff
   public taskForm!: FormGroup;
+  public selectedCategory = '';
 
   uid: string = ''; //Will need to move this to a separate dataservice...
 
@@ -68,7 +69,7 @@ export class SubmitTaskComponent implements OnInit {
       location: ['', Validators.required],
       remarks: ['', Validators.required],
       isPublic: ['', Validators.required],
-      category: ['', Validators.required]
+      category: ['']
     });
 
     let user;
@@ -157,6 +158,10 @@ export class SubmitTaskComponent implements OnInit {
     this.info.open(marker)
   }
 
+selectCategoryHandler(event: any) {
+  this.selectedCategory = event.target.value;
+}
+
 async submitTask() {
   let coords: any = {
     lat: '',
@@ -182,7 +187,7 @@ async submitTask() {
 
   console.log("TaskName " + userTaskname);
   console.log("remarks: " + userRemarks);
-  console.log("Category: " + userCategory)
+  console.log("Category: " + userCategory + ' or ' + this.selectedCategory)
 
   if (!userTaskname || !userRemarks) {
     return;
