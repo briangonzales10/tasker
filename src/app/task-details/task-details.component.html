@@ -67,10 +67,10 @@
       <p class="card-text mb-2"><strong>Category: </strong> {{ myCategory }}</p>
       <p class="card-text mb-2"><strong>Status: </strong>{{ singleTask.data.status }}</p>
       <p class="card-text mb-2"><strong>Remarks:</strong> </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
-      <p *ngIf="singleTask.data.infolink != null" class="card-text mb-2"><a [href]="singleTask.data.infolink" class="info-link">Additional Info Link</a></p>
+      <p *ngIf="singleTask.data.infolink != null" class="card-text mb-2"><a [href]="singleTask.data.infolink" class="info-link" target="_blank">Additional Info Link</a></p>
       <p class="card-text mb-2">
         <small class="text-muted"
-          >Submitted on:
+          >Submitted on
           {{
             singleTask.data.timestamp._seconds * 1000 | date: "MM/dd/yyyy"
           }}</small

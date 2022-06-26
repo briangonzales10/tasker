@@ -8,12 +8,12 @@
 
 .info-link a:link, a:visited {
   color: rgb(48, 55, 58);
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
 
 .info-link a:hover {
   color: rgb(48, 55, 58);
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .details_header {
