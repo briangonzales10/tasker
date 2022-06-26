@@ -1,8 +1,11 @@
+import { CategoryTypes } from "./tasktype";
+
 export interface SubmitTask {
     taskname: string;
     location: SubmitDataLocation;
     remarks: string;
     isPublic: boolean;
+    category: CategoryTypes;
     uid: string;
 }
 

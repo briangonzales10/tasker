@@ -8,7 +8,7 @@
     </div>
     
     <div class="mb-3">
-        <!-- <div class="position-relative top-0 start-50 translate-middle"> -->
+
         <div class="mb-3">
             <label for="location" class="form-label">Address / Location: *</label>
            
@@ -35,13 +35,28 @@
             </google-map>
             </div>
         </div>   
-    <!-- </div> -->
+
     </div>
+    <!--Categories Div-->
+    <div class="mb-3">
+        <label for="category" class="form-label">Category*</label>
+        <select class="form-select" aria-label="category selec">
+            <option selected>Choose a category</option>
+            <option [value]="Category.Food">Food & Drink</option>
+            <option [value]="Category.Landmark">Place or Landmark</option>
+            <option [value]="Category.Entertaiment">Entertainment</option>
+            <option [value]="Category.Experience">Experience</option>
+            <option [value]="Category.Travel">Travel</option>
+            <option [value]="Category.Other">Other</option>
+          </select>
+    </div>
+    <!-- Remarks Div-->
     <div class="mb-3">
         <label for="remarks" class="form-label">Remarks<span class="formbuilder-required">*</span></label>
         
         <textarea type="textarea" placeholder="Go to Kaiju's and Eat the Spicy Miso Ramen!" class="form-control" formControlName="remarks" name="remarks" id="remarks" ></textarea>
     </div>
+    <!-- Public option div -->
     <div class="mb-3">
         <label for="isPublic" class="form-check-label">Make Public<span class="formbuilder-required">*</span></label>
         <div class="radio-group">
@@ -56,6 +71,7 @@
               </div>
         </div>
     </div>
+    <!-- submit button div-->
     <div class="mb-3">
         <div class="formbuilder-button">
         <button type="submit" class="btn-info btn" [disabled]="!taskForm.valid" name="submitButton" access="false"  id="submitButton">Submit</button>

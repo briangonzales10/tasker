@@ -6,10 +6,11 @@ export interface TaskType {
 
 export interface TaskData {
     picUrl: string;
-    isComplete: boolean;
+    category: CategoryTypes;
     status: string;
     taskname: string;
     timestamp: TaskDataTime;
+    completedTime: TaskDataTime;
     location: TaskDataLocation;
     remarks: string;
     isPublic: boolean;
@@ -30,4 +31,13 @@ export interface TaskDataLocation {
 export interface Proof {
     filename: string;
     proofURL: string;
+}
+
+export enum CategoryTypes {
+    Food = "food",
+    Landmark = "landmark",
+    Experience = "experience",
+    Entertainment = "entertainment",
+    Travel = "travel",
+    Other = "other"
 }

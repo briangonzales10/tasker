@@ -145,7 +145,7 @@ export class TaskDetailsComponent implements OnInit {
     
     this.mytaskProofImage = this.singleTask.data.proof.proofURL;
     if (this.mytaskProofImage == null) {
-      this.mytaskProofImage = '/assets/broken-image.png'
+      this.mytaskProofImage = '/assets/brokenimage.png'
     }
   }
 

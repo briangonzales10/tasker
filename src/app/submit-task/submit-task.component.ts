@@ -6,6 +6,7 @@ import { ToastService } from 'angular-toastify';
 import { TasksService } from '../shared/services/tasks.service';
 import { AuthService } from '../shared/services/auth.service';
 import { Router } from '@angular/router';
+import { CategoryTypes } from '../shared/services/tasktype';
 
 export interface markerProps {
   lat: any | undefined;
@@ -27,6 +28,7 @@ export class SubmitTaskComponent implements OnInit {
 
 
   private TASK_ADD_ERROR:string = "Task could not be added!"
+  public Category = CategoryTypes;
   //Google Map Stuff
   initialCoords: google.maps.LatLngLiteral = {
     lat: 38.890164884113375,
@@ -65,7 +67,8 @@ export class SubmitTaskComponent implements OnInit {
       taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
       location: ['', Validators.required],
       remarks: ['', Validators.required],
-      isPublic: ['', Validators.required]
+      isPublic: ['', Validators.required],
+      category: ['', Validators.required]
     });
 
     let user;
@@ -170,6 +173,7 @@ async submitTask() {
   let userAddress = this.searchField.nativeElement.value;
   let userRemarks = this.taskForm.get('remarks')!.value;
   let userIsPublic = this.taskForm.get('isPublic')?.value!;
+  let userCategory = this.taskForm.get('category')!.value;
   let userLocation: SubmitDataLocation = {
     address: userAddress,
     latitude: coords.lat, //will update lat + long later
@@ -188,6 +192,7 @@ async submitTask() {
       remarks: userRemarks,
       location: userLocation,
       isPublic: userIsPublic,
+      category: userCategory,
       uid: this.uid,
   };
   console.log(postTask);
