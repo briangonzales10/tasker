@@ -60,20 +60,20 @@
 
       <div id="details_body_lower" class="border border-dark rounded-end p-2">
 <!-- Proof Button Div-->
-        <div class="card-text mb-2" *ngIf="singleTask.data.status === 'COMPLETE'">
+        <div class="card-text mb-2 mt-2" *ngIf="singleTask.data.status === 'COMPLETE'">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
         </div>
 <!-- Proof Button Div End-->
       <p class="card-text mb-2"><strong>Category: </strong> {{ myCategory }}</p>
       <p class="card-text mb-2"><strong>Status: </strong>{{ singleTask.data.status }}</p>
-      <p class="card-text">Remarks: </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
-      <p class="card-text">
+      <p class="card-text"><strong>Remarks:</strong> </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
+      <p *ngIf="singleTask.data.infolink != null" class="card-text mb-2"><a [href]="singleTask.data.infolink" class="info-link">Additional Info Link</a></p>
         <small class="text-muted"
           >Submitted on:
           {{
-            singleTask.data.timestamp._seconds * 1000 | date: "MM-dd-yyyy"
+            singleTask.data.timestamp._seconds * 1000 | date: "MM/dd/yyyy"
           }}</small
-        > <small *ngIf="singleTask.data.completedTime != null" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM-dd-yyyy" }}</small>
+        > <small *ngIf="singleTask.data.completedTime != null" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM/dd/yyyy" }}</small>
       </p>
       </div>
     </div>

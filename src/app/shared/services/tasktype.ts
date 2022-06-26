@@ -13,6 +13,7 @@ export interface TaskData {
     completedTime: TaskDataTime;
     location: TaskDataLocation;
     remarks: string;
+    infolink: string;
     isPublic: boolean;
     proof: Proof;
 }

@@ -6,6 +6,15 @@
   border-color: rgb(196, 200, 207) !important;
 }
 
+.info-link a:link, a:visited {
+  color: rgb(48, 55, 58);
+  text-decoration: underline;
+}
+
+.info-link a:hover {
+  color: rgb(48, 55, 58);
+  text-decoration: none;
+}
 
 .details_header {
   width: 100%;
