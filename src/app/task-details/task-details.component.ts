@@ -91,7 +91,7 @@ export class TaskDetailsComponent implements OnInit {
       console.log('Route URL: ' + this.router.url)
     }
 
-    if (taskIdFromRoute !== null) {
+    if (taskIdFromRoute !== null && taskIdFromRoute !== '') {
       let response = this.tasksService.getSingleTask(taskIdFromRoute)
       if (response != undefined) {
         this.singleTask = response;
