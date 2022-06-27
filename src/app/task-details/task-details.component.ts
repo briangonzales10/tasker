@@ -95,6 +95,7 @@ export class TaskDetailsComponent implements OnInit {
     }
 
     if (taskIdFromRoute !== null && taskIdFromRoute !== '') {
+      console.log('attempting to get task')
       let response = this.tasksService.getSingleTask(taskIdFromRoute)
       if (response != undefined) {
         this.singleTask = response;
@@ -178,12 +179,18 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   deleteConfirm() {
+    if (this.isEmpty(this.singleTask.taskid)) {
+      return;
+    }
     this.tasksService.deleteTask(this.singleTask.taskid);
     this.toastService.warn(this.TASK_DELETED);
     this.router.navigate(['/']);
   }
 
   statusChange(updatedStatus: string) {
+    if (this.isEmpty(this.singleTask.taskid)) {
+      return;
+    }
     let response = this.tasksService.updateTask(
       this.singleTask.taskid,
       updatedStatus
