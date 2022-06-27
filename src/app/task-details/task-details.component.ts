@@ -85,12 +85,13 @@ export class TaskDetailsComponent implements OnInit {
 
   async ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
-    let taskIdFromRoute = routeParams.get('taskId') || '';
+    let taskIdFromRoute: any = routeParams.get('taskId') || '';
     console.log('Route URL1: ' + this.router.url)
     let urlpieces = this.router.url.split("/")
-    console.log(urlpieces[-1])
+    console.log(urlpieces[urlpieces.length - 1])
+
     if (taskIdFromRoute === null || taskIdFromRoute === undefined) {
-      console.log('Route URL2: ' + this.router.url)
+      taskIdFromRoute = urlpieces.slice(-1).pop;
     }
 
     if (taskIdFromRoute !== null && taskIdFromRoute !== '') {
