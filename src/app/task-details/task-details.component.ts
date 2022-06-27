@@ -209,7 +209,7 @@ export class TaskDetailsComponent implements OnInit {
     return displayedCategory;
   }
 
-  isEmpty(value: string):boolean {
+  isEmpty(value: any):boolean {
     return (value == '' || value == null)
   }
 
