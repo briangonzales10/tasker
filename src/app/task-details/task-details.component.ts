@@ -88,9 +88,9 @@ export class TaskDetailsComponent implements OnInit {
     let taskIdFromRoute: any = routeParams.get('taskId') || '';
     console.log('Route URL1: ' + this.router.url)
     let urlpieces = this.router.url.split("/")
-    console.log(urlpieces[urlpieces.length - 1])
-
-    if (taskIdFromRoute === null || taskIdFromRoute === undefined) {
+    console.log(`TaskIdFromRoute: ${taskIdFromRoute}`)
+    
+    if (taskIdFromRoute == null || taskIdFromRoute == undefined || taskIdFromRoute === '') {
       taskIdFromRoute = urlpieces.slice(-1).pop;
     }
 
@@ -168,7 +168,7 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   editAllowed() {
-    let uid = this.authService.loggedInUser.uid || '0'
+    let uid: any = this.authService.loggedInUser.uid || '0'
     if (
       this.authService.isLoggedIn === true && uid === environment.adminUid
     ) {
