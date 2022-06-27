@@ -73,6 +73,7 @@ export class TaskDetailsComponent implements OnInit {
   //GEOCODE Stuff
 
   addressResult: Observable<Object> | undefined;
+  navigationEnd!: NavigationEnd
 
   constructor(
     private route: ActivatedRoute,
@@ -88,19 +89,8 @@ export class TaskDetailsComponent implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     let taskIdFromRoute = routeParams.get('taskId');
     if (!taskIdFromRoute) {
-      this.router.events.subscribe( val => {
-        if (val instanceof NavigationEnd) {
-          let myRoute = this.route
-          while (myRoute.firstChild) {
-          myRoute = myRoute.firstChild;
-          }
-          myRoute.params.subscribe(params => {
-            taskIdFromRoute = params['taskId']
-          })
-        }
-      })
+      console.log('Route URL: ' + this.router.url)
     }
-  
 
     if (taskIdFromRoute !== null) {
       let response = this.tasksService.getSingleTask(taskIdFromRoute)
