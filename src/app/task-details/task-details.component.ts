@@ -167,9 +167,9 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   editAllowed() {
+    let uid = this.authService.loggedInUser.uid || '0'
     if (
-      this.authService.isLoggedIn === true &&
-      this.authService.loggedInUser.uid === environment.adminUid
+      this.authService.isLoggedIn === true && uid === environment.adminUid
     ) {
       this.isAdmin = true;
       console.log("Admin Logged in")
