@@ -4,6 +4,7 @@ export interface SubmitTask {
     taskname: string;
     location: SubmitDataLocation;
     remarks: string;
+    infolink: string;
     isPublic: boolean;
     category: string;
     uid: string;

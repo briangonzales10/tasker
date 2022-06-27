@@ -52,6 +52,7 @@ export class SubmitTaskComponent implements OnInit {
   //Form Stuff
   public taskForm!: FormGroup;
   public selectedCategory = '';
+  private LINK_REGEX = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/
 
   uid: string = ''; //Will need to move this to a separate dataservice...
 
@@ -68,6 +69,7 @@ export class SubmitTaskComponent implements OnInit {
       taskname: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
       location: ['', Validators.required],
       remarks: ['', Validators.required],
+      infolink: ['', Validators.pattern(this.LINK_REGEX)],
       isPublic: ['', Validators.required],
       category: ['']
     });
@@ -177,6 +179,7 @@ async submitTask() {
   let userTaskname = this.taskForm.get('taskname')!.value;
   let userAddress = this.searchField.nativeElement.value;
   let userRemarks = this.taskForm.get('remarks')!.value;
+  let userInfoLink = this.taskForm.get('infolink')?.value;
   let userIsPublic = this.taskForm.get('isPublic')?.value!;
   let userLocation: SubmitDataLocation = {
     address: userAddress,
@@ -195,6 +198,7 @@ async submitTask() {
   const postTask: SubmitTask = {
       taskname: userTaskname,
       remarks: userRemarks,
+      infolink: userInfoLink,
       location: userLocation,
       isPublic: userIsPublic,
       category: this.selectedCategory,

@@ -6,6 +6,18 @@
   border-color: rgb(196, 200, 207) !important;
 }
 
+a.info-link:link {
+  color: rgb(79, 114, 128);
+  text-decoration: underline !important;
+}
+a.info-link:visited {
+  color: rgb(79, 114, 128);
+  text-decoration: underline !important;
+}
+a.info-link:hover {
+  color: rgb(61, 69, 73);
+  text-decoration: none !important;
+}
 
 .details_header {
   width: 100%;
