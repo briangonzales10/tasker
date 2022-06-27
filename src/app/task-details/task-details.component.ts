@@ -84,8 +84,6 @@ export class TaskDetailsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-
-    this.editAllowed();
     const routeParams = this.route.snapshot.paramMap;
     let taskIdFromRoute = routeParams.get('taskId') || '';
     console.log('Route URL: ' + this.router.url)
@@ -104,7 +102,7 @@ export class TaskDetailsComponent implements OnInit {
         this.toastService.error(this.TASK_ERROR);
       }
     }
-
+    this.editAllowed();
   }
 
   async initMap() {
