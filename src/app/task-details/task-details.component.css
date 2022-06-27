@@ -7,15 +7,15 @@
 }
 
 a.info-link:link {
-  color: rgb(53, 75, 84);
+  color: rgb(79, 114, 128);
   text-decoration: underline !important;
 }
 a.info-link:visited {
-  color: rgb(53, 75, 84);
+  color: rgb(79, 114, 128);
   text-decoration: underline !important;
 }
 a.info-link:hover {
-  color: rgb(53, 75, 84);
+  color: rgb(61, 69, 73);
   text-decoration: none !important;
 }
 

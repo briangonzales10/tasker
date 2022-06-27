@@ -22,15 +22,15 @@
       >
         Edit
       </button>
-      <div *ngIf="singleTask.data.proof == null">
-        <button
+      
+        <button *ngIf="singleTask.data.proof == null"
         class="btn btn-secondary mx-1"
         data-bs-toggle="modal"
         data-bs-target="#uploadProofModal"
       >
         Proof
       </button>
-      </div>
+      
 
       <!-- admin controls end -->
     </div>
