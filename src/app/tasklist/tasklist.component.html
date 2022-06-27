@@ -1,20 +1,13 @@
 <div class="tasklist_content_container">
-<div id="cards_outer_container">
-    <div *ngFor="let task of publicTasksArray | async" class="card shadow-sm p-3 bg-body rounded mb-3 mt-3 mx-1" style="max-width: 350px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="{{ task.data.picUrl }}" class="img-fluid rounded-start" alt="{{ task.data.taskname }}">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">    <a [title]="task.data.taskname"
-                [routerLink]="['/showtask', task.taskid]">{{ task.data.taskname }}</a></h5>
-              <p class="card-text task-remarks">{{ task.data.remarks }}</p>
-              <p class="card-text">Status: {{ task.data.status }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-</div>
+  <div id="cards_outer_container">
+    <ng-container *ngFor="let task of publicTasksArray | async">
+      <app-card
+        [picUrl]="task.data.picUrl"
+        [taskName]="task.data.taskname"
+        [remarks]="task.data.remarks"
+        [status]="task.data.status"
+        [taskId]="task.taskid"
+      ></app-card>
+    </ng-container>
+  </div>
 </div>
