@@ -87,7 +87,8 @@ export class TaskDetailsComponent implements OnInit {
 
     this.editAllowed();
     const routeParams = this.route.snapshot.paramMap;
-    let taskIdFromRoute = routeParams.get('taskId');
+    let taskIdFromRoute = routeParams.get('taskId') || '';
+    console.log('Route URL: ' + this.router.url)
     if (!taskIdFromRoute || taskIdFromRoute === undefined) {
       console.log('Route URL: ' + this.router.url)
     }
