@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Router } from '@angular/router';
 import { TasksService } from '../shared/services/tasks.service';
 import { CategoryTypes, TaskType } from '../shared/services/tasktype';
@@ -9,7 +9,7 @@ import {
   MapInfoWindow,
   MapMarker,
 } from '@angular/google-maps';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { ToastService } from 'angular-toastify';
 import { AuthService } from '../shared/services/auth.service';
 import { environment } from 'src/environments/environment';
@@ -83,9 +83,24 @@ export class TaskDetailsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+
     this.editAllowed();
     const routeParams = this.route.snapshot.paramMap;
-    const taskIdFromRoute = routeParams.get('taskId');
+    let taskIdFromRoute = routeParams.get('taskId');
+    if (!taskIdFromRoute) {
+      this.router.events.subscribe( val => {
+        if (val instanceof NavigationEnd) {
+          let myRoute = this.route
+          while (myRoute.firstChild) {
+          myRoute = myRoute.firstChild;
+          }
+          myRoute.params.subscribe(params => {
+            taskIdFromRoute = params['taskId']
+          })
+        }
+      })
+    }
+  
 
     if (taskIdFromRoute !== null) {
       let response = this.tasksService.getSingleTask(taskIdFromRoute)
