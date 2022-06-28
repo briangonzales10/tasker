@@ -1,9 +1,9 @@
 <div
   class="card shadow-sm p-3 bg-body rounded mb-3 mt-3 mx-1"
-  style="max-width: 350px; min-height: 230px; max-height: 230px;">
+  style="max-width: 350px; min-height: 235px; max-height: 250px;">
   <!-- Top Row for title-->
   <div id="top_row" class="row g-0">
-    <div id="title-col" class="col text-truncate">
+    <div id="title-col" class="col-md-12 text-truncate">
       <h5 class="card-title">
         <a [title]="taskName"
          [routerLink]="['/showtask', taskId]">
@@ -22,10 +22,10 @@
       />
   </div>
     <div class="col-md-8">
-      <div class="card-body">
+      <div class="card_remarks card-text task-remarks fs-6">
 
-        <p class="card-text fs-6 task-remarks">{{ remarks }}</p>
-        <p class="card-text fs-6">Status: {{ niceStatus }}</p>
+        <p>{{ remarks }}</p>
+        <p>Status: {{ niceStatus }}</p>
       </div>
     </div>
   </div>
