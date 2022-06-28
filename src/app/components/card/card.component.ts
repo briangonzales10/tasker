@@ -22,7 +22,7 @@ export class CardComponent implements OnInit {
   taskId!: string;
 
   @Input()
-  cateogory!: string;
+  category!: string;
 
   niceStatus: string = "";
   categoryPic: any;
