@@ -13,6 +13,10 @@
   max-height: 235px;
 }
 
+.fs-6 {
+  font-size: 14px !important;
+}
+
 @media screen and (max-width: 768px) {
 
   .img-fluid {
@@ -25,12 +29,12 @@
   .card {
     min-width: 350px;
     min-height: none;
-    max-height: none;;
+    max-height: none;
     height: auto !important;
   }
 
   .fs-6 {
-    font-size: 14px !important;
+    font-size: 16px !important;
   }
 
 }
