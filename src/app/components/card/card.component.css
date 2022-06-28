@@ -1,4 +1,4 @@
-#title-col {
+#title-column {
   display: inline;
   overflow: hidden;
 }
@@ -13,7 +13,7 @@
   max-height: 235px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
 
   .img-fluid {
     width: 80px;
