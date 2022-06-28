@@ -1,12 +1,25 @@
-@media screen and (max-width: 600px) {
-  #cards_outer_container {
-    width: 98%;
-    flex-direction: column;
-    align-content: center;
-  }
+#title-column {
+  display: inline;
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 8px !important;
+}
+
+.card {
+  max-width: 350px;
+  min-height: 235px;
+  max-height: 235px;
+}
+
+.fs-6 {
+  font-size: 14px !important;
+}
+
+@media screen and (max-width: 768px) {
 
   .img-fluid {
-    width: 80px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -15,19 +28,13 @@
 
   .card {
     min-width: 350px;
-    display: flex;
-    flex-direction: row;
+    min-height: none;
+    max-height: none;
+    height: auto !important;
   }
 
-  .map_container {
-    width: 400px;
-    height: 400px;
+  .fs-6 {
+    font-size: 16px !important;
   }
-}
 
-@media screen and (max-width: 500px) {
-  .map_container {
-    width: 300px;
-    height: 300px;
-  }
 }

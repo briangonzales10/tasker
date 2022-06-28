@@ -2,11 +2,11 @@
   <div id="cards_outer_container">
     <ng-container *ngFor="let task of publicTasksArray | async">
       <app-card
-        [picUrl]="task.data.picUrl"
         [taskName]="task.data.taskname"
         [remarks]="task.data.remarks"
         [status]="task.data.status"
         [taskId]="task.taskid"
+        [category]="task.data.category"
       ></app-card>
     </ng-container>
   </div>
