@@ -1,3 +1,8 @@
+#title-col {
+  display: inline;
+  overflow: hidden;
+}
+
 @media screen and (max-width: 600px) {
   #cards_outer_container {
     width: 98%;

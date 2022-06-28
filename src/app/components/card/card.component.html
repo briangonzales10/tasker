@@ -1,25 +1,33 @@
 <div
   class="card shadow-sm p-3 bg-body rounded mb-3 mt-3 mx-1"
-  style="max-width: 350px; max-height: 230px"
->
-  <div class="row g-0">
+  style="max-width: 350px; min-height: 230px; max-height: 230px;">
+  <!-- Top Row for title-->
+  <div id="top_row" class="row g-0">
+    <div id="title-col" class="col text-truncate">
+      <h5 class="card-title">
+        <a [title]="taskName"
+         [routerLink]="['/showtask', taskId]">
+         {{ taskName }}</a>
+      </h5>
+    </div>
+  </div>
+  <!-- top row end -->
+  <!-- bottom row with pic $ remarks-->
+  <div id="bottom_row" class="row g-0">
     <div class="col-md-4">
       <img
         src="{{ picUrl }}"
         class="img-fluid rounded-start"
         alt="{{ taskName }}"
       />
-    </div>
+  </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">
-          <a [title]="taskName"
-           [routerLink]="['/showtask', taskId]">
-           {{ taskName }}</a>
-        </h5>
+
         <p class="card-text fs-6 task-remarks">{{ remarks }}</p>
         <p class="card-text fs-6">Status: {{ niceStatus }}</p>
       </div>
     </div>
   </div>
+  <!-- bottom row end-->
 </div>
