@@ -16,7 +16,6 @@
 @media screen and (max-width: 768px) {
 
   .img-fluid {
-    width: 80px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -25,8 +24,8 @@
 
   .card {
     min-width: 350px;
-    min-height: fit-content;
-    height: auto;
+    min-height: none;
+    height: auto !important;
     display: flex;
     flex-direction: column;
   }
