@@ -8,8 +8,6 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./card.component.css"],
 })
 export class CardComponent implements OnInit {
-  @Input()
-  picUrl: any;
 
   @Input()
   taskName!: string;
@@ -23,7 +21,11 @@ export class CardComponent implements OnInit {
   @Input()
   taskId!: string;
 
+  @Input()
+  cateogory!: string;
+
   niceStatus: string = "";
+  categoryPic: any;
 
   constructor() {}
 

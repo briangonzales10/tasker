@@ -38,7 +38,7 @@ a:hover {
 .task-remarks {
     word-break: break-word;
     text-overflow: ellipsis;
-    overflow: scroll;
+    overflow: hidden;
 }
 
 .marker_position_label {
