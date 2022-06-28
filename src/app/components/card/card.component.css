@@ -28,7 +28,7 @@
     min-height: fit-content;
     height: auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
   }
 
 }
