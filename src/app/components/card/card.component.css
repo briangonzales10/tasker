@@ -25,7 +25,12 @@
   .card {
     min-width: 350px;
     min-height: none;
+    max-height: none;;
     height: auto !important;
+  }
+
+  .fs-6 {
+    font-size: 14px !important;
   }
 
 }
