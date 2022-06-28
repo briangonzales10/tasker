@@ -18,10 +18,6 @@
 
 @media screen and (max-width: 600px) {
 
-    .tasklist_content_container {
-        
-    }
-
     #cards_outer_container {
         width: 98%;
         flex-direction: column;

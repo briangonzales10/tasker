@@ -3,12 +3,17 @@
   overflow: hidden;
 }
 
+.card-body {
+  padding: 8px !important;
+}
+
+.card {
+  max-width: 350px;
+  min-height: 235px;
+  max-height: 235px;
+}
+
 @media screen and (max-width: 600px) {
-  #cards_outer_container {
-    width: 98%;
-    flex-direction: column;
-    align-content: center;
-  }
 
   .img-fluid {
     width: 80px;
@@ -20,6 +25,8 @@
 
   .card {
     min-width: 350px;
+    min-height: fit-content;
+    height: auto;
     display: flex;
     flex-direction: row;
   }
