@@ -26,8 +26,6 @@
     min-width: 350px;
     min-height: none;
     height: auto !important;
-    display: flex;
-    flex-direction: column;
   }
 
 }
