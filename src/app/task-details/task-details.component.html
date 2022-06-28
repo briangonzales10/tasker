@@ -9,18 +9,11 @@
 
     <div *ngIf="isAdmin" class="mb-2" id="details_header_adminControl">
       <button
-        class="btn btn-danger"
-        data-bs-toggle="modal"
-        data-bs-target="#deleteModal"
-      >
-        Delete
-      </button>
-      <button
         class="btn btn-secondary mx-1"
         data-bs-toggle="modal"
         data-bs-target="#statusModal"
       >
-        Edit
+      <i class="fa-regular fa-pen-to-square"></i> Edit
       </button>
       
         <button *ngIf="singleTask.data.proof == null"
@@ -28,9 +21,15 @@
         data-bs-toggle="modal"
         data-bs-target="#uploadProofModal"
       >
-        Proof
+      <i class="fa-solid fa-arrow-up-from-bracket"></i> Proof
       </button>
-      
+      <button
+      class="btn btn-danger mx-1"
+      data-bs-toggle="modal"
+      data-bs-target="#deleteModal"
+    >
+    <i class="fa-solid fa-circle-minus"></i> Delete
+    </button>
 
       <!-- admin controls end -->
     </div>
@@ -61,12 +60,12 @@
       <div id="details_body_lower" class="border border-dark rounded-end p-2">
 <!-- Proof Button Div-->
         <div class="card-text mb-2 mt-2" *ngIf="singleTask.data.status === 'COMPLETE'">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal">Proof</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal"><i class="fa-solid fa-image"></i> Proof</button>
         </div>
 <!-- Proof Button Div End-->
-      <p class="card-text mb-2"><strong>Category: </strong> {{ myCategory }}</p>
-      <p class="card-text mb-2"><strong>Status: </strong>{{ singleTask.data.status }}</p>
-      <p class="card-text mb-2"><strong>Remarks:</strong> </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
+      <p class="card-text mb-2"><i class="fa-solid fa-umbrella-beach"></i> <strong>Category </strong> {{ myCategory }}</p>
+      <p class="card-text mb-2"><i class="fa-solid fa-circle-right"> </i><strong>Status </strong>{{ singleTask.data.status }}</p>
+      <p class="card-text mb-2"><i class="fa-solid fa-comments"> </i><strong>Remarks</strong> </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
       <p *ngIf="!isEmpty(singleTask.data.infolink)" class="card-text mb-2"><a [href]="singleTask.data.infolink" class="info-link" target="_blank">Additional Info Link</a></p>
       <p class="card-text mb-2">
         <small class="text-muted"
