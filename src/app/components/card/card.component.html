@@ -1,6 +1,6 @@
 <div
   class="card shadow-sm p-3 bg-body rounded mb-3 mt-3 mx-1"
-  style="max-width: 350px"
+  style="max-width: 350px; max-height: 230px"
 >
   <div class="row g-0">
     <div class="col-md-4">
@@ -17,8 +17,8 @@
            [routerLink]="['/showtask', taskId]">
            {{ taskName }}</a>
         </h5>
-        <p class="card-text task-remarks">{{ remarks }}</p>
-        <p class="card-text">Status: {{ niceStatus }}</p>
+        <p class="card-text fs-6 task-remarks">{{ remarks }}</p>
+        <p class="card-text fs-6">Status: {{ niceStatus }}</p>
       </div>
     </div>
   </div>
