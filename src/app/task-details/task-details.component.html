@@ -2,7 +2,9 @@
   <div class="details_container shadow p-3 w-70 mb-5 bg-body rounded">
     <div class="details_header mb-3">
       <div id="details_header_title">
-        <h3>{{ singleTask.data.taskname }}</h3>
+        <h3>
+          <strong>{{ singleTask.data.taskname }}</strong>
+        </h3>
       </div>
     </div>
     <!-- admin controls start -->
@@ -13,68 +15,103 @@
         data-bs-toggle="modal"
         data-bs-target="#statusModal"
       >
-      <i class="fa-regular fa-pen-to-square"></i> Edit
+        <i class="fa-regular fa-pen-to-square"></i> Edit
       </button>
-      
-        <button *ngIf="singleTask.data.proof == null"
+
+      <button
+        *ngIf="singleTask.data.proof == null"
         class="btn btn-secondary mx-1"
         data-bs-toggle="modal"
         data-bs-target="#uploadProofModal"
       >
-      <i class="fa-solid fa-arrow-up-from-bracket"></i> Proof
+        <i class="fa-solid fa-arrow-up-from-bracket"></i> Proof
       </button>
       <button
-      class="btn btn-danger mx-1"
-      data-bs-toggle="modal"
-      data-bs-target="#deleteModal"
-    >
-    <i class="fa-solid fa-circle-minus"></i> Delete
-    </button>
+        class="btn btn-danger mx-1"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteModal"
+      >
+        <i class="fa-solid fa-circle-minus"></i> Delete
+      </button>
 
       <!-- admin controls end -->
     </div>
 
     <div class="details_body">
       <div class="center_map_container">
-      <div class="map_container">
-        <google-map 
-        [zoom]="zoom" 
-        [center]="center" 
-        [options]="options"
-        [width]="null"
-        [height]="null">
-          <map-marker
-            #somemarker="mapMarker"
-            *ngFor="let marker of markerPositions"
-            [position]="marker"
-            [options]="markerOptions"
-            [label]="markerLabel"
-            (mapClick)="openInfo(somemarker)"
+        <div class="map_container">
+          <google-map
+            [zoom]="zoom"
+            [center]="center"
+            [options]="options"
+            [width]="null"
+            [height]="null"
           >
-          </map-marker>
-          <map-info-window>{{ infoContent }}</map-info-window>
-        </google-map>
-      </div>
+            <map-marker
+              #somemarker="mapMarker"
+              *ngFor="let marker of markerPositions"
+              [position]="marker"
+              [options]="markerOptions"
+              [label]="markerLabel"
+              (mapClick)="openInfo(somemarker)"
+            >
+            </map-marker>
+            <map-info-window>{{ infoContent }}</map-info-window>
+          </google-map>
+        </div>
       </div>
 
       <div id="details_body_lower" class="border border-dark rounded-end p-2">
-<!-- Proof Button Div-->
-        <div class="card-text mb-2 mt-2" *ngIf="singleTask.data.status === 'COMPLETE'">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proofModal"><i class="fa-solid fa-image"></i> Proof</button>
+        <!-- Proof Button Div-->
+        <div
+          class="card-text mb-2 mt-2"
+          *ngIf="singleTask.data.status === 'COMPLETE'"
+        >
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#proofModal"
+          >
+            <i class="fa-solid fa-image"></i> Proof
+          </button>
         </div>
-<!-- Proof Button Div End-->
-      <p class="card-text mb-2"><i class="fa-solid fa-umbrella-beach"></i> <strong>Category </strong> {{ myCategory }}</p>
-      <p class="card-text mb-2"><i class="fa-solid fa-circle-right"> </i><strong>Status </strong>{{ singleTask.data.status }}</p>
-      <p class="card-text mb-2"><i class="fa-solid fa-comments"> </i><strong>Remarks</strong> </p> <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
-      <p *ngIf="!isEmpty(singleTask.data.infolink)" class="card-text mb-2"><a [href]="singleTask.data.infolink" class="info-link" target="_blank">Additional Info Link</a></p>
-      <p class="card-text mb-2">
-        <small class="text-muted"
-          >Submitted on
-          {{
-            singleTask.data.timestamp._seconds * 1000 | date: "MM/dd/yyyy"
-          }}</small
-        > <small *ngIf="!isEmpty(singleTask.data.completedTime)" class="text-muted">  |  Completed on: {{ singleTask.data.completedTime._seconds * 1000 | date: "MM/dd/yyyy" }}</small>
-      </p>
+        <!-- Proof Button Div End-->
+        <p class="card-text mb-2">
+          <strong>Category </strong><i class="fa-solid fa-umbrella-beach"></i>
+          {{ myCategory }}
+        </p>
+        <p class="card-text mb-2">
+          <strong>Status </strong><i class="fa-solid fa-circle-right"></i>
+          {{ singleTask.data.status }}
+        </p>
+        <p class="card-text mb-2">
+          <strong>Remarks </strong><i class="fa-solid fa-comments"></i>
+        </p>
+        <p class="card-text task-remarks">{{ singleTask.data.remarks }}</p>
+        <p *ngIf="!isEmpty(singleTask.data.infolink)" class="card-text mb-2">
+          <i class="fa-solid fa-link"></i>
+          <a [href]="singleTask.data.infolink" class="info-link" target="_blank"
+            >Additional Info Link</a
+          >
+        </p>
+        <p class="card-text mb-2">
+          <small class="text-muted"
+            >Submitted on
+            {{
+              singleTask.data.timestamp._seconds * 1000 | date: "MM/dd/yyyy"
+            }}</small
+          >
+          <small
+            *ngIf="!isEmpty(singleTask.data.completedTime)"
+            class="text-muted"
+          >
+            | Completed on:
+            {{
+              singleTask.data.completedTime._seconds * 1000 | date: "MM/dd/yyyy"
+            }}</small
+          >
+        </p>
       </div>
     </div>
   </div>
@@ -90,9 +127,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">
-          Update Status
-        </h5>
+        <h5 class="modal-title" id="editModalLabel">Update Status</h5>
         <button
           type="button"
           class="btn-close"
@@ -101,9 +136,8 @@
         ></button>
       </div>
       <div class="modal-body">
-
         <p>Select Updated Status</p>
-        
+
         <button
           type="button"
           class="btn btn-info mx-1"
@@ -197,9 +231,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="uploadProofModalLabel">
-          Update Status
-        </h5>
+        <h5 class="modal-title" id="uploadProofModalLabel">Update Status</h5>
         <button
           type="button"
           class="btn-close"
@@ -209,8 +241,7 @@
       </div>
       <div class="modal-body">
         <p>Upload Completion Proof</p>
-        <app-file-upload
-        [taskId]="singleTask.taskid"></app-file-upload>
+        <app-file-upload [taskId]="singleTask.taskid"></app-file-upload>
       </div>
       <div class="modal-footer mx-1">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -221,10 +252,21 @@
   </div>
 </div>
 <!-- Proof Modal-->
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="proofModal" aria-hidden="true" id="proofModal">
+<div
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="proofModal"
+  aria-hidden="true"
+  id="proofModal"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <img class="img-fluid" [src]="mytaskProofImage" alt="proof of Completion" />
+      <img
+        class="img-fluid"
+        [src]="mytaskProofImage"
+        alt="proof of Completion"
+      />
     </div>
   </div>
 </div>
