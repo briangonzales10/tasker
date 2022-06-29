@@ -77,6 +77,19 @@
           </button>
         </div>
         <!-- Proof Button Div End-->
+        <p
+          *ngIf="!isEmpty(singleTask.data.location.address)"
+          class="card-text mb-2"
+        >
+          <i class="fa-solid fa-map-location-dot"></i>
+          <a
+            [href]="
+              https:  //www.google.com/maps/search/?api=1&query=singleTask.data.location.address
+            "
+            target="_blank"
+            >{{ singleTask.data.location.address }}</a
+          >
+        </p>
         <p class="card-text mb-2">
           <strong>Category </strong><i class="fa-solid fa-umbrella-beach"></i>
           {{ myCategory }}

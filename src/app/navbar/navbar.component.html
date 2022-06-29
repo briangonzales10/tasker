@@ -23,12 +23,15 @@
           >
         </li>
         <li class="nav-item">
-          <a class="nav-link active" routerLink="/submit">Submit Task</a>
+          <i class="fa-solid fa-square-arrow-up-right"></i
+          ><a class="nav-link active" routerLink="/submit"> Submit Task</a>
         </li>
         <li *ngIf="isAuthenticated == true" class="nav-item">
-          <a class="nav-link active" routerLink="/my-tasks">My Tasks</a>
+          <i class="fa-solid fa-list"></i
+          ><a class="nav-link active" routerLink="/my-tasks"> My Tasks</a>
         </li>
         <li class="nav-item dropdown">
+          <i class="fa-solid fa-user"></i>
           <a
             class="nav-link active dropdown-toggle"
             href="#"
@@ -37,8 +40,8 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <span *ngIf="!userDisplayName">Account</span>
-            <span *ngIf="userDisplayName">{{ userDisplayName }}</span>
+            <span *ngIf="!userDisplayName"> Account</span>
+            <span *ngIf="userDisplayName"> {{ userDisplayName }}</span>
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li>
@@ -62,7 +65,8 @@
                 *ngIf="isAuthenticated == true"
                 class="dropdown-item"
                 routerLink="/user-settings"
-                >Edit Account</a
+              >
+                <i class="fa-solid fa-user-pen"></i> Edit Account</a
               >
             </li>
             <li>
