@@ -12,7 +12,7 @@ import { TaskType } from '../shared/services/tasktype';
 export class TasklistComponent implements OnInit {
 
   publicTasksArray: any = this.taskService.allTasks;
-  displayedArray = new Subject<TaskType[]>;
+  displayedArray = new Subject<TaskType[]>();
   displayedArrayObs!: Observable<TaskType[]>;
 
   constructor(
