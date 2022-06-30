@@ -13,7 +13,6 @@ export class TasklistComponent implements OnInit {
 
   publicTasksArray: any = this.taskService.allTasks;
   displayedArray = new BehaviorSubject<TaskType[]>(this.publicTasksArray);
-  displayedArrayObs!: Observable<TaskType[]>;
 
   constructor(
     private taskService: TasksService,
@@ -21,12 +20,11 @@ export class TasklistComponent implements OnInit {
     ) {}
 
   ngOnInit() {
-    this.displayedArrayObs = this.displayedArray.asObservable();
   }
 
   filterListBy(event: any) {
     console.log(`Test: ${this.displayedArray}`)
-    this.displayedArrayObs.pipe(
+    this.displayedArray.pipe(
       map( tasks => event === 'ALL'?
        tasks : tasks.filter( task => task.data.status === event))
     )
@@ -40,14 +38,16 @@ export class TasklistComponent implements OnInit {
 
   sortListBy(event: any) {
 
-    this.displayedArrayObs.pipe(
+    this.displayedArray.pipe(
       map( tasks => tasks.sort( (a:TaskType, b: TaskType) =>
       event === 'asc'? 
       b.data.timestamp._seconds - a.data.timestamp._seconds :
       a.data.timestamp._seconds - b.data.timestamp._seconds
       ))
     )
-    .subscribe(res => console.log(`Sort by ${event}`))
+    .subscribe(res => {
+      this.displayedArray.next(res);
+      console.log(`Sort by ${event}`)})
     
   }
 }
