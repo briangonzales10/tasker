@@ -24,7 +24,7 @@ export class TasklistComponent implements OnInit {
   }
 
   filterListBy(event: any) {
-    this.displayedArray.pipe(
+    this.displayedArray$.pipe(
       map( tasks => event === 'ALL'?
        tasks : tasks.filter( task => task.data.status === event))
     )
@@ -38,7 +38,7 @@ export class TasklistComponent implements OnInit {
 
   sortListBy(event: any) {
 
-    this.displayedArray.pipe(
+    this.displayedArray$.pipe(
       map( tasks => tasks.sort( (a:TaskType, b: TaskType) =>
       event === 'asc'? 
       b.data.timestamp._seconds - a.data.timestamp._seconds :
