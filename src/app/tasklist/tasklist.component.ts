@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, Subject } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
 import { TaskType } from '../shared/services/tasktype';
@@ -12,9 +12,8 @@ import { TaskType } from '../shared/services/tasktype';
 export class TasklistComponent implements OnInit {
 
   publicTasksArray: any = this.taskService.allTasks;
-  displayedArray = new BehaviorSubject<TaskType[]>(this.publicTasksArray);
-  $displayObs = this.displayedArray.asObservable();
-
+  displayedArray: Observable<TaskType[]> = this.publicTasksArray;
+  displaySubject = new Subject<any>();
 
   constructor(
     private taskService: TasksService,
@@ -34,7 +33,7 @@ export class TasklistComponent implements OnInit {
       console.log(`Filtered by ${event}`);
       console.log(`Response:`)
       res.forEach((task) => console.log(task))
-      this.displayedArray.next(res);
+      this.displaySubject.next(res);
     })
   }
 
@@ -48,7 +47,7 @@ export class TasklistComponent implements OnInit {
       ))
     )
     .subscribe(res => {
-      this.displayedArray.next(res);
+      this.displaySubject.next(res);
       console.log(`Sort by ${event}`)})
     
   }
