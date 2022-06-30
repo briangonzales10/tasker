@@ -3,7 +3,7 @@
   (filterBy)="filterListBy($event)" 
   (sortBy)="sortListBy($event)"></app-filter>
   <div id="cards_outer_container">
-    <ng-container *ngFor="let task of displayedArray$ | async">
+    <ng-container *ngFor="let task of displayedArrayObs | async">
       <app-card
         [taskName]="task.data.taskname"
         [remarks]="task.data.remarks"
