@@ -22,5 +22,13 @@ export class TasklistComponent implements OnInit {
   ngOnInit() {
   }
 
+  filterListBy(event: any) {
+    console.log(`Filter: ${event}`)
+  }
+
+  sortListBy(event: any) {
+    console.log(`Sort: ${event}`)
+  }
+
 }
 

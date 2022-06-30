@@ -1,0 +1,18 @@
+
+.filter {
+    width: 50%
+}
+
+.filter_panel {
+    width: 50%;
+    display: inline;
+}
+
+
+@media screen and (max-width: 600px) {
+
+    .filter {
+        width: 98%
+    }
+    
+}
