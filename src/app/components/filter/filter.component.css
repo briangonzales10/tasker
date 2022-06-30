@@ -8,6 +8,7 @@ select.filter_panel {
 }
 
 .filter_container {
+    width: 300px;
     justify-content: center;
     background-color: white;
 }
