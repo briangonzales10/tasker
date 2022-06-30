@@ -95,7 +95,9 @@ export class TaskDetailsComponent implements OnInit {
         this.myCategory = this.parseCategoryType(this.singleTask.data.category);
         let encodedAddress = encodeURIComponent(this.singleTask.data.location.address);
         console.log(`EncodedURI: ${encodedAddress}`)
-        this.myAddressLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(this.singleTask.data.location.address);
+        this.myAddressLink = 'https://www.google.com/maps/search/?api=1&query='
+         + encodeURIComponent(this.singleTask.data.location.address)
+         + 'z=16';
         this.initMap();
       } else {
         console.log(response)
