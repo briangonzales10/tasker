@@ -1,5 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { EventEmitter } from 'stream';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-filter',
@@ -9,10 +8,10 @@ import { EventEmitter } from 'stream';
 export class FilterComponent implements OnInit {
 
   @Output()
-  filterBy = new EventEmitter();
+  filterBy = new EventEmitter<any>();
 
   @Output()
-  sortBy = new EventEmitter();
+  sortBy = new EventEmitter<any>();
 
   constructor() { }
 
