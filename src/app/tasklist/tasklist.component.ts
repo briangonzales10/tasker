@@ -26,6 +26,7 @@ export class TasklistComponent implements OnInit {
   }
 
   filterListBy(event: any) {
+    console.log(`Test: ${this.displayedArray}`)
     this.displayedArrayObs.pipe(
       map( tasks => event === 'ALL'?
        tasks : tasks.filter( task => task.data.status === event))
