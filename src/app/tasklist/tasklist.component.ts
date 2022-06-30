@@ -35,7 +35,7 @@ export class TasklistComponent implements OnInit {
   filterListBy(event: any) {
     //console.log(`Test: ${this.displayedArray}`)
     this.publicTasksArray.pipe(
-      map( tasks => event === 'ALL'?
+      map( tasks => event === 'ALL' || event == null ?
        tasks : tasks.filter( task => task.data.status === event))
     )
     .subscribe(res => {
