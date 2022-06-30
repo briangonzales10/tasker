@@ -35,6 +35,7 @@ export class TaskDetailsComponent implements OnInit {
   mytask = {};
   mytaskProofImage: any;
   myCategory: any;
+  myAddressLink: any;
   coords: any;
 
   //Google Maps stuff.
@@ -92,6 +93,7 @@ export class TaskDetailsComponent implements OnInit {
       if (response != undefined) {
         this.singleTask = response;
         this.myCategory = this.parseCategoryType(this.singleTask.data.category);
+        this.myAddressLink = encodeURIComponent(`https://www.google.com/maps/search/?api=1&query=${this.singleTask.data.location.address}`);
         this.initMap();
       } else {
         console.log(response)
