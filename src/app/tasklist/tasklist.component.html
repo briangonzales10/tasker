@@ -1,6 +1,9 @@
 <div class="tasklist_content_container">
+  <app-filter 
+  (filterBy)="filterListBy($event)" 
+  (sortBy)="sortListBy($event)"></app-filter>
   <div id="cards_outer_container">
-    <ng-container *ngFor="let task of publicTasksArray | async">
+    <ng-container *ngFor="let task of (dispSubject | async)">
       <app-card
         [taskName]="task.data.taskname"
         [remarks]="task.data.remarks"

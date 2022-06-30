@@ -1,26 +1,64 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { 
+  ChangeDetectorRef, 
+  Component, OnInit, 
+  ChangeDetectionStrategy,
+  NgZone  } from '@angular/core';
+import { BehaviorSubject, Observable, map, Subject } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
+import { TaskType } from '../shared/services/tasktype';
 
 @Component({
   selector: 'app-tasklist',
   templateUrl: './tasklist.component.html',
-  styleUrls: ['./tasklist.component.css']
+  styleUrls: ['./tasklist.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class TasklistComponent implements OnInit {
 
-  publicTasksArray: any = this.taskService.allTasks;
- 
+  publicTasksArray: Observable<TaskType[]> = this.taskService.allTasks;
+  //displayedArray: TaskType[] = [];
+  dispSubject = new BehaviorSubject<TaskType[]>([]);
 
   constructor(
     private taskService: TasksService,
-    public authService: AuthService
+    public authService: AuthService,
+
     ) {}
 
   ngOnInit() {
+    this.publicTasksArray.subscribe( tasks => {
+      this.dispSubject.next(tasks);
+    });
   }
 
+  filterListBy(event: any) {
+    //console.log(`Test: ${this.displayedArray}`)
+    this.publicTasksArray.pipe(
+      map( tasks => event === 'ALL' || event == null || event === '' ?
+       tasks : tasks.filter( task => task.data.status === event))
+    )
+    .subscribe(res => {
+      console.log(`Filtered by ${event}`);
+      console.log(`Response:`)
+      res.forEach((task) => console.log(task))
+      this.dispSubject.next(res)
+    })
+  }
+
+  sortListBy(event: any) {
+
+    this.publicTasksArray.pipe(
+      map( tasks => tasks.sort( (a:TaskType, b: TaskType) =>
+      event === 'asc'? 
+      b.data.timestamp._seconds - a.data.timestamp._seconds :
+      a.data.timestamp._seconds - b.data.timestamp._seconds
+      ))
+    )
+    .subscribe(res => {
+      this.dispSubject.next(res);
+      console.log(`Sort by ${event}`)})
+    
+  }
 }
 
