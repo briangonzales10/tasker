@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
 import { TaskType } from '../shared/services/tasktype';
@@ -12,7 +12,7 @@ import { TaskType } from '../shared/services/tasktype';
 export class TasklistComponent implements OnInit {
 
   publicTasksArray: any = this.taskService.allTasks;
-  displayedArray = new Subject<TaskType[]>();
+  displayedArray = new BehaviorSubject<TaskType[]>(this.publicTasksArray);
   displayedArrayObs!: Observable<TaskType[]>;
 
   constructor(
