@@ -16,22 +16,26 @@ import { TaskType } from '../shared/services/tasktype';
 })
 export class TasklistComponent implements OnInit {
 
-  publicTasksArray: any = this.taskService.allTasks;
-  displayedArray: Observable<TaskType[]> = this.publicTasksArray;
+  publicTasksArray: Observable<TaskType[]> = this.taskService.allTasks;
+  displayedArray: TaskType[] = [];
+  dispSubject = new BehaviorSubject<TaskType[]>([]);
 
   constructor(
     private taskService: TasksService,
     public authService: AuthService,
-    private cdr: ChangeDetectorRef,
-    private zone: NgZone
+
     ) {}
 
   ngOnInit() {
+    this.publicTasksArray.subscribe( tasks => {
+      this.displayedArray = tasks;
+    });
+    this.dispSubject.next(this.displayedArray)
   }
 
   filterListBy(event: any) {
     //console.log(`Test: ${this.displayedArray}`)
-    this.displayedArray.pipe(
+    this.publicTasksArray.pipe(
       map( tasks => event === 'ALL'?
        tasks : tasks.filter( task => task.data.status === event))
     )
@@ -39,13 +43,13 @@ export class TasklistComponent implements OnInit {
       console.log(`Filtered by ${event}`);
       console.log(`Response:`)
       res.forEach((task) => console.log(task))
-      this.cdr.detectChanges()
+      this.dispSubject.next(res)
     })
   }
 
   sortListBy(event: any) {
 
-    this.displayedArray.pipe(
+    this.publicTasksArray.pipe(
       map( tasks => tasks.sort( (a:TaskType, b: TaskType) =>
       event === 'asc'? 
       b.data.timestamp._seconds - a.data.timestamp._seconds :
@@ -53,6 +57,7 @@ export class TasklistComponent implements OnInit {
       ))
     )
     .subscribe(res => {
+      this.dispSubject.next(res);
       console.log(`Sort by ${event}`)})
     
   }
