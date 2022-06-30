@@ -13,6 +13,8 @@ export class TasklistComponent implements OnInit {
 
   publicTasksArray: any = this.taskService.allTasks;
   displayedArray = new BehaviorSubject<TaskType[]>(this.publicTasksArray);
+  $displayObs = this.displayedArray.asObservable();
+
 
   constructor(
     private taskService: TasksService,
@@ -23,7 +25,7 @@ export class TasklistComponent implements OnInit {
   }
 
   filterListBy(event: any) {
-    console.log(`Test: ${this.displayedArray}`)
+    //console.log(`Test: ${this.displayedArray}`)
     this.displayedArray.pipe(
       map( tasks => event === 'ALL'?
        tasks : tasks.filter( task => task.data.status === event))
