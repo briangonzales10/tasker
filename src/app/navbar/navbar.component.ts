@@ -48,7 +48,6 @@ export class NavbarComponent implements OnInit {
 
   randomIcon():string {
     let iconIndex = Math.floor(Math.random() * icons.length);
-    console.log(icons[iconIndex]);
     return icons[iconIndex];
   }
 }

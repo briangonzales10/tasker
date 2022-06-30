@@ -1,92 +1,169 @@
 <div class="form_container_large">
-<div class=" shadow p-3 mb-5 bg-body rounded task_form_container">
+  <div class="shadow p-3 mb-5 bg-body rounded task_form_container">
     <form [formGroup]="taskForm" (ngSubmit)="submitTask()">
-    <div class="mb-3">
-        <label for="taskname" class="form-label">Task Name<span class="formbuilder-required">*</span></label>
-        
-        <input type="text" placeholder="Task Name (e.g. Name of Place)" class="form-control" formControlName="taskname" name="taskname" >
-    </div>
-    
-    <div class="mb-3">
+      <div class="mb-3">
+        <label for="taskname" class="form-label"
+          ><i class="fa-solid fa-location-arrow"></i> Task Name<span
+            class="formbuilder-required"
+            >*</span
+          ></label
+        >
 
+        <input
+          type="text"
+          placeholder="Task Name (e.g. Name of Place)"
+          class="form-control"
+          formControlName="taskname"
+          name="taskname"
+        />
+      </div>
+
+      <div class="mb-3">
         <div class="mb-3">
-            <label for="location" class="form-label">Address / Location: *</label>
-           
-        <input #mapSearchField class="myMapSearchField form-control" formControlName="location" type="text" name="location" placeholder="Address Search" />
+          <label for="location" class="form-label"
+            ><i class="fa-solid fa-earth-asia"></i> Address / Location: *</label
+          >
+
+          <input
+            #mapSearchField
+            class="myMapSearchField form-control"
+            formControlName="location"
+            type="text"
+            name="location"
+            placeholder="Address Search"
+          />
         </div>
-        <div class="center_container "> 
-            <div class="map_container">
+        <div class="center_container">
+          <div class="map_container">
             <google-map
-            [zoom]="zoom"
-            [center]="initialCoords"
-            [options]="mapOptions"
-            [width]="null"
-            [height]="null"
-            (mapClick)="mapEventHandler('mapClick', $event)">
-                <map-marker
+              [zoom]="zoom"
+              [center]="initialCoords"
+              [options]="mapOptions"
+              [width]="null"
+              [height]="null"
+              (mapClick)="mapEventHandler('mapClick', $event)"
+            >
+              <map-marker
                 #markerElem="mapMarker"
                 *ngFor="let marker of markers"
                 [position]="marker.position"
                 [label]="marker.label"
                 [title]="marker.title"
                 [options]="marker.options"
-                (mapClick)="openInfo(markerElem, marker.info)">
-                </map-marker>
+                (mapClick)="openInfo(markerElem, marker.info)"
+              >
+              </map-marker>
             </google-map>
-            </div>
-        </div>   
-
-    </div>
-    <!--Categories Div-->
-    <div class="mb-3">
-        <label for="category" class="form-label">Category*</label>
-        <select (change)="selectCategoryHandler($event)" class="form-select" aria-label="category select" name="category" id="category">
-            <option selected>Choose a category</option>
-            <option [value]="Category.Food">Food & Drink</option>
-            <option [value]="Category.Landmark">Place or Landmark</option>
-            <option [value]="Category.Entertainment">Entertainment</option>
-            <option [value]="Category.Experience">Experience</option>
-            <option [value]="Category.Travel">Travel</option>
-            <option [value]="Category.Other">Other</option>
-          </select>
-    </div>
-    <!-- Remarks Div-->
-    <div class="mb-3">
-        <label for="remarks" class="form-label">Remarks<span class="formbuilder-required">*</span></label>
-        
-        <textarea type="textarea" placeholder="Go to Kaiju's and Eat the Spicy Miso Ramen!" class="form-control" formControlName="remarks" name="remarks" id="remarks" ></textarea>
-    </div>
-    <!-- Info Link Div-->
-    <div class="mb-3">
-        <label for="infolink" class="form-label">Info Link <span class="muted-text">(optional)</span></label>
-        
-        <input type="text" placeholder="Extra info link e.g. https://www.kaijuramen.us " class="form-control" formControlName="infolink" name="infolink" >
-    </div>
-    <!-- Public option div -->
-    <div class="mb-3">
-        <label for="isPublic" class="form-check-label">Make Public<span class="formbuilder-required">*</span></label>
-        <div class="radio-group">
-           
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" formControlName="isPublic" id="isPublic" name="isPublic" value="true">
-                <label class="form-check-label" >Yes</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" formControlName="isPublic" id="isPublic" name="isPublic"  value="false">
-                <label class="form-check-label">No</label>
-              </div>
+          </div>
         </div>
-    </div>
-    <!-- submit button div-->
-    <div class="mb-3">
+      </div>
+      <!--Categories Div-->
+      <div class="mb-3">
+        <label for="category" class="form-label"
+          ><i class="fa-solid fa-umbrella-beach"></i> Category *</label
+        >
+        <select
+          (change)="selectCategoryHandler($event)"
+          class="form-select"
+          aria-label="category select"
+          name="category"
+          id="category"
+        >
+          <option selected>Choose a category</option>
+          <option [value]="Category.Food">Food & Drink</option>
+          <option [value]="Category.Landmark">Place or Landmark</option>
+          <option [value]="Category.Entertainment">Entertainment</option>
+          <option [value]="Category.Experience">Experience</option>
+          <option [value]="Category.Travel">Travel</option>
+          <option [value]="Category.Other">Other</option>
+        </select>
+      </div>
+      <!-- Remarks Div-->
+      <div class="mb-3">
+        <label for="remarks" class="form-label"
+          ><i class="fa-solid fa-comments"></i> Remarks<span
+            class="formbuilder-required"
+          >
+            *</span
+          ></label
+        >
+
+        <textarea
+          type="textarea"
+          placeholder="Go to Kaiju's and Eat the Spicy Miso Ramen!"
+          class="form-control"
+          formControlName="remarks"
+          name="remarks"
+          id="remarks"
+        ></textarea>
+      </div>
+      <!-- Info Link Div-->
+      <div class="mb-3">
+        <label for="infolink" class="form-label"
+          ><i class="fa-solid fa-link"></i> Info Link
+          <span class="muted-text">(optional)</span></label
+        >
+
+        <input
+          type="text"
+          placeholder="Extra info link e.g. https://www.kaijuramen.us "
+          class="form-control"
+          formControlName="infolink"
+          name="infolink"
+        />
+      </div>
+      <!-- Public option div -->
+      <div class="mb-3">
+        <label for="isPublic" class="form-check-label"
+          >Make Public<span class="formbuilder-required">*</span></label
+        >
+        <div class="radio-group">
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              formControlName="isPublic"
+              id="isPublic"
+              name="isPublic"
+              value="true"
+            />
+            <label class="form-check-label">Yes</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              formControlName="isPublic"
+              id="isPublic"
+              name="isPublic"
+              value="false"
+            />
+            <label class="form-check-label">No</label>
+          </div>
+        </div>
+      </div>
+      <!-- submit button div-->
+      <div class="mb-3">
         <div class="formbuilder-button">
-        <button type="submit" class="btn-info btn" [disabled]="!taskForm.valid" name="submitButton" access="false"  id="submitButton">Submit</button>
-        <button type="reset" class="btn btn-danger mx-2" (clicK)="resetForm()">Clear Form</button>    
-    </div>
-
-    </div>
-</form>
+          <button
+            type="submit"
+            class="btn-info btn"
+            [disabled]="!taskForm.valid"
+            name="submitButton"
+            access="false"
+            id="submitButton"
+          >
+            <i class="fa-solid fa-square-arrow-up-right"></i> Submit
+          </button>
+          <button
+            type="reset"
+            class="btn btn-danger mx-2"
+            (clicK)="resetForm()"
+          >
+            <i class="fa-solid fa-rotate"></i> Clear Form
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
-</div>
-
-
