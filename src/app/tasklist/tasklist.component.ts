@@ -1,8 +1,8 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable, map } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
+import { TaskType } from '../shared/services/tasktype';
 
 @Component({
   selector: 'app-tasklist',
@@ -12,7 +12,7 @@ import { TasksService } from '../shared/services/tasks.service';
 export class TasklistComponent implements OnInit {
 
   publicTasksArray: any = this.taskService.allTasks;
- 
+  displayedArray: Observable<TaskType[]> = this.publicTasksArray;
 
   constructor(
     private taskService: TasksService,
@@ -23,11 +23,26 @@ export class TasklistComponent implements OnInit {
   }
 
   filterListBy(event: any) {
-    console.log(`Filter: ${event}`)
+    if (event === 'ALL') {
+      this.displayedArray = this.publicTasksArray;
+      return;
+    }
+    this.displayedArray.pipe(
+      map( tasks => tasks.filter( task => task.data.status === event))
+    )
+    .subscribe(res => console.log(`Filtered by ${event}`))
   }
 
   sortListBy(event: any) {
-    console.log(`Sort: ${event}`)
+    if (event === 'asc') {
+    this.displayedArray.pipe(
+      map( tasks => tasks.sort( (a:TaskType, b: TaskType) =>
+       a.data.timestamp._seconds - b.data.timestamp._seconds))
+    )
+    .subscribe(res => console.log(`Sort by ${event}`))
+    } else {
+      this.displayedArray = this.publicTasksArray;
+    }
   }
 
 }

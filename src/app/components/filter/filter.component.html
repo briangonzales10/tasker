@@ -1,14 +1,15 @@
-<div class="filter input-group mb-2">
+<div class="filter mb-2">
     <div id="filterBy" class="filter_panel">
         <select (change)="filterSelect($event)" class="form-select form-select-sm" aria-label="Filter By" name="filter">
             <option selected>Filter By</option>
+            <option value="ALL">All</option>
             <option value="OPEN">Open</option>
             <option value="COMPLETE">Completed</option>
             <option value="REJECTED">Rejected</option>
           </select>
     </div>
-    <div id="sortBy" (change)="sortSelect($event)" class="filter_panel">
-        <select class="form-select form-select-sm" aria-label="Sort By" name="sort">
+    <div id="sortBy" class="filter_panel">
+        <select (change)="sortSelect($event)" class="form-select form-select-sm" aria-label="Sort By" name="sort">
             <option selected>Sort By</option>
             <option value="asc">Newest</option>
             <option value="desc">Oldest</option>
