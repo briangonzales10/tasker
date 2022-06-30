@@ -17,7 +17,7 @@ import { TaskType } from '../shared/services/tasktype';
 export class TasklistComponent implements OnInit {
 
   publicTasksArray: Observable<TaskType[]> = this.taskService.allTasks;
-  displayedArray: TaskType[] = [];
+  //displayedArray: TaskType[] = [];
   dispSubject = new BehaviorSubject<TaskType[]>([]);
 
   constructor(
@@ -28,9 +28,8 @@ export class TasklistComponent implements OnInit {
 
   ngOnInit() {
     this.publicTasksArray.subscribe( tasks => {
-      this.displayedArray = tasks;
+      this.dispSubject.next(tasks);
     });
-    this.dispSubject.next(this.displayedArray)
   }
 
   filterListBy(event: any) {
