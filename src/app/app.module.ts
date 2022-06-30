@@ -26,6 +26,7 @@ import { SubmitTaskComponent } from './submit-task/submit-task.component';
 import { MyTasksComponent } from './components/my-tasks/my-tasks.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { CardComponent } from './components/card/card.component';
+import { FilterComponent } from './components/filter/filter.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { CardComponent } from './components/card/card.component';
     SubmitTaskComponent,
     MyTasksComponent,
     FileUploadComponent,
-    CardComponent
+    CardComponent,
+    FilterComponent
   ],
   imports: [
     BrowserModule,
