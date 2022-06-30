@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { 
+  ChangeDetectorRef, 
+  Component, OnInit, 
+  ChangeDetectionStrategy,
+  NgZone  } from '@angular/core';
 import { BehaviorSubject, Observable, map, Subject } from 'rxjs';
 import { AuthService } from '../shared/services/auth.service';
 import { TasksService } from '../shared/services/tasks.service';
@@ -7,7 +11,8 @@ import { TaskType } from '../shared/services/tasktype';
 @Component({
   selector: 'app-tasklist',
   templateUrl: './tasklist.component.html',
-  styleUrls: ['./tasklist.component.css']
+  styleUrls: ['./tasklist.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class TasklistComponent implements OnInit {
 
@@ -17,7 +22,8 @@ export class TasklistComponent implements OnInit {
   constructor(
     private taskService: TasksService,
     public authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
     ) {}
 
   ngOnInit() {
