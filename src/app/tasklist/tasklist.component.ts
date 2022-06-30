@@ -25,25 +25,31 @@ export class TasklistComponent implements OnInit {
   filterListBy(event: any) {
     if (event === 'ALL') {
       this.displayedArray = this.publicTasksArray;
+      this.displayedArray.subscribe();
+      console.log(`Filtered by ${event}`)
       return;
     }
     this.displayedArray.pipe(
       map( tasks => tasks.filter( task => task.data.status === event))
     )
-    .subscribe(res => console.log(`Filtered by ${event}`))
+    .subscribe(res => {
+      console.log(`Filtered by ${event}`);
+      console.log(`Response:`)
+      res.forEach((task) => console.log(task))
+    })
   }
 
   sortListBy(event: any) {
-    if (event === 'asc') {
+
     this.displayedArray.pipe(
       map( tasks => tasks.sort( (a:TaskType, b: TaskType) =>
-       a.data.timestamp._seconds - b.data.timestamp._seconds))
-    )
-    .subscribe(res => console.log(`Sort by ${event}`))
-    } else {
-      this.displayedArray = this.publicTasksArray;
-    }
+      event === 'asc'? 
+      b.data.timestamp._seconds - a.data.timestamp._seconds :
+      a.data.timestamp._seconds - b.data.timestamp._seconds
+      ))
+  )
+  .subscribe(res => console.log(`Sort by ${event}`))
+    
   }
-
 }
 
