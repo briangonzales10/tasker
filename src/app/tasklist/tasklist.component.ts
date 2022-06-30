@@ -22,7 +22,6 @@ export class TasklistComponent implements OnInit {
 
   ngOnInit() {
     this.displayedArrayObs = this.displayedArray.asObservable();
-    this.displayedArray.next(this.publicTasksArray);
   }
 
   filterListBy(event: any) {
