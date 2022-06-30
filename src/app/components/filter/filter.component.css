@@ -1,6 +1,10 @@
 
 .filter_panel {
-    max-width: 120px;
+    max-width: 150px;
+}
+
+select.filter_panel {
+    width: 120px
 }
 
 .filter_container {
