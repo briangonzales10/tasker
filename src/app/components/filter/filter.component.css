@@ -4,10 +4,12 @@
 }
 
 .filter_panel {
-    width: 50%;
-    display: inline;
+    max-width: 100px;
 }
 
+.filter_container {
+    justify-content: center;
+}
 
 @media screen and (max-width: 600px) {
 

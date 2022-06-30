@@ -23,14 +23,9 @@ export class TasklistComponent implements OnInit {
   }
 
   filterListBy(event: any) {
-    if (event === 'ALL') {
-      this.displayedArray = this.publicTasksArray;
-      this.displayedArray.subscribe();
-      console.log(`Filtered by ${event}`)
-      return;
-    }
     this.displayedArray.pipe(
-      map( tasks => tasks.filter( task => task.data.status === event))
+      map( tasks => event === 'ALL'?
+       tasks : tasks.filter( task => task.data.status === event))
     )
     .subscribe(res => {
       console.log(`Filtered by ${event}`);
